@@ -1,0 +1,127 @@
+/* ==========================================================================
+   ParticleIntro Stylesheet (Mobile-First)
+   ========================================================================== */
+
+.intro-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile browsers */
+  background-color: #050711;
+  background-image: radial-gradient(circle at 50% 50%, #090e24 0%, #050711 72%, #020308 100%);
+  overflow: hidden;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Canvas fills the exact viewport */
+.intro-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+.intro-canvas-bg {
+  z-index: 10;
+}
+
+/* Foreground canvas sits in front of project cards (z-index: 25) with zero pointer-events */
+.intro-canvas-fg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: block;
+  pointer-events: none;
+  z-index: 28;
+}
+
+/* --------------------------------------------------------------------------
+   Phase 2: Logo Presence
+   -------------------------------------------------------------------------- */
+.intro-logo-presence {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 96px;
+  height: 96px;
+  pointer-events: none;
+  z-index: 5; /* Canvas particles at z=0..500 layer around it */
+  will-change: transform, opacity;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro-logo-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* Very subtle, restrained ambient illumination matching Apple-style polish */
+  filter: drop-shadow(0 0 16px rgba(0, 209, 255, 0.18));
+}
+
+@media (min-width: 768px) {
+  .intro-logo-presence {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+
+
+/* --------------------------------------------------------------------------
+   prefers-reduced-motion Accessible Mode
+   -------------------------------------------------------------------------- */
+.intro-container.reduced-motion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: reducedFadeIn 1.5s ease-out forwards;
+}
+
+.reduced-motion-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+
+.reduced-motion-logo {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.reduced-motion-title {
+  font-size: clamp(24px, 7vw, 48px);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.reduced-motion-sub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@keyframes reducedFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

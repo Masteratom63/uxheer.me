@@ -1,0 +1,271 @@
+/* ==========================================================================
+   Spatial Gallery & Sequential Projects Stylesheet
+   ========================================================================== */
+
+.spatial-gallery-fixed-viewport {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  perspective: 1100px;
+  perspective-origin: 50% 50%;
+  pointer-events: none; /* Allows all touch swipes to pass through to scroll */
+  z-index: 25;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spatial-gallery-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Spatial Project Wrapper & Surface
+   -------------------------------------------------------------------------- */
+.spatial-project-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(330px, 86vw);
+  height: min(440px, 62vh);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  pointer-events: none;
+  touch-action: pan-y;
+}
+
+.project-spatial-surface {
+  width: 100%;
+  height: 100%;
+  background: rgba(8, 12, 28, 0.82);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 
+    0 24px 52px -12px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+/* Subtle top edge accent */
+.surface-glow-edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0, 209, 255, 0.7) 0%, rgba(20, 255, 0, 0.7) 100%);
+  opacity: 0.85;
+}
+
+/* Meta Bar */
+.project-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.project-index-tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #00D1FF;
+}
+
+.project-category-tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+}
+
+/* Abstract Spatial Artwork Area */
+.project-spatial-artwork {
+  width: 100%;
+  flex: 1;
+  margin: 14px 0;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Artwork 1: Concentric Spatial Rings */
+.artwork-spatial-rings {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spatial-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 209, 255, 0.35);
+}
+
+.ring-1 {
+  width: 32px;
+  height: 32px;
+  border-color: rgba(20, 255, 0, 0.6);
+}
+
+.ring-2 {
+  width: 60px;
+  height: 60px;
+  border-color: rgba(0, 209, 255, 0.4);
+}
+
+.ring-3 {
+  width: 88px;
+  height: 88px;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.spatial-core-glow {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #00D1FF;
+  box-shadow: 0 0 12px #00D1FF;
+}
+
+/* Artwork 2: Matrix Capsules */
+.artwork-spatial-matrix {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 64px;
+}
+
+.matrix-capsule {
+  width: 11px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(0, 209, 255, 0.7) 0%, rgba(20, 255, 0, 0.7) 100%);
+}
+
+.cap-1 {
+  height: 44px;
+}
+
+.cap-2 {
+  height: 64px;
+}
+
+.cap-3 {
+  height: 52px;
+}
+
+/* Artwork 3: Prism Facets */
+.artwork-spatial-prism {
+  position: relative;
+  width: 80px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prism-facet {
+  position: absolute;
+  border: 1px solid rgba(0, 209, 255, 0.4);
+  transform: rotate(45deg);
+}
+
+.facet-1 {
+  width: 42px;
+  height: 42px;
+  border-color: rgba(20, 255, 0, 0.5);
+}
+
+.facet-2 {
+  width: 60px;
+  height: 60px;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.prism-line {
+  position: absolute;
+  width: 70px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #00D1FF, transparent);
+}
+
+/* Footer Content */
+.project-info-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.project-title {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(20px, 5.0vw, 24px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.project-explore-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.explore-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #00D1FF;
+  box-shadow: 0 0 6px #00D1FF;
+}
+
+.explore-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .spatial-project-wrapper {
+    width: 380px;
+    height: 480px;
+  }
+  .project-spatial-surface {
+    padding: 28px 24px;
+  }
+}
