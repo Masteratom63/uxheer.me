@@ -60,8 +60,9 @@ body {
 
 /* Particle environment inside full project presentation */
 .spatial-experience.project-active .intro-canvas {
-  opacity: 0.72 !important;
-  transition: opacity 0.8s ease;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.6s ease;
 }
 
 .spatial-experience.project-active .intro-canvas-fg {

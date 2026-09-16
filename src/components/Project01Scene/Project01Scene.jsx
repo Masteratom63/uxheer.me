@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { updateSpatial } from '../../utils/spatialController';
+import React, { useEffect, useRef, useState } from 'react';
+import Project01Particles from './Project01Particles';
+import PeopleCarousel from './PeopleCarousel';
 import './Project01Scene.css';
 
 // Project Assets
@@ -27,56 +28,46 @@ import personaCopycat from '../../assets/projects/scotiabank-scene/persona-copyc
  * Project01Scene Component
  * 
  * Immersive project experience for SCOTIABANK SCENE+.
- * Integrated directly into uxheer.me's spatial universe.
- * 
- * Narrative sequence:
- *  - Project Intro
- *  - 01: The Question
- *  - 02: We Started with Assumptions
- *  - 03: Research (Methodology & Process)
- *  - 04: People (Personas & Balanced Journey Maps)
- *  - 05: The Shift
- *  - 06: Building the Experience (Banking, Scene, Explore, Travel)
- *  - 07: Iteration
- *  - 08: Testing
- *  - 09: What Changed
- *  - 10: Not Everything Survived (XP System)
- *  - 11: The Final Experience
- *  - 12: Prototype (Interactive Figma Embed + Direct Fallback)
- *  - 13: Results
- *  - 14: Recognition
- *  - Project Exit -> Continue toward Project 02
+ * Integrated directly into uxheer.me's spatial universe with dedicated local particles.
  */
 export default function Project01Scene({ isActive, onExit }) {
   const containerRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isExiting, setIsExiting] = useState(false);
+
+  // Trigger exit wave transition
+  const handleTriggerExit = () => {
+    if (isExiting) return;
+    setIsExiting(true);
+  };
 
   // Focus and scroll to top on enter, keyboard accessibility
   useEffect(() => {
     if (isActive) {
+      setIsExiting(false);
+      setScrollProgress(0);
       if (containerRef.current) {
         containerRef.current.scrollTop = 0;
       }
       
       const handleKeyDown = (e) => {
-        if (e.key === 'Escape' && onExit) {
-          onExit();
+        if (e.key === 'Escape') {
+          handleTriggerExit();
         }
       };
       
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isActive, onExit]);
+  }, [isActive]);
 
-  // Subtle camera & particle parallax during internal scrolling
+  // Exclusive local scroll calculation (drives Project01 local particle camera)
   const handleScroll = () => {
     const el = containerRef.current;
     if (!el) return;
     const maxScroll = Math.max(1, el.scrollHeight - el.clientHeight);
     const fraction = Math.min(1, Math.max(0, el.scrollTop / maxScroll));
-    // Gently glide spatial camera through 0.16 to 0.24 for live background particle parallax
-    const subRatio = 0.16 + fraction * 0.08;
-    updateSpatial(subRatio);
+    setScrollProgress(fraction);
   };
 
   if (!isActive) return null;
@@ -95,12 +86,19 @@ export default function Project01Scene({ isActive, onExit }) {
       {/* Subtle dismiss trigger */}
       <button
         className="project-spatial-dismiss"
-        onClick={onExit}
+        onClick={handleTriggerExit}
         aria-label="Return to portfolio space"
       >
         <span className="dismiss-icon" aria-hidden="true">✕</span>
         <span className="dismiss-label">RETURN</span>
       </button>
+
+      {/* Local 3D Spatial Particle Cosmos for Project 01 */}
+      <Project01Particles
+        scrollProgress={scrollProgress}
+        isExiting={isExiting}
+        onExitComplete={onExit}
+      />
 
       <div className="project-immersive-content">
         {/* =================================================================== */}
@@ -308,27 +306,14 @@ export default function Project01Scene({ isActive, onExit }) {
                 </p>
               </header>
 
-              <div className="artifact-gallery-strip">
-                <div className="artifact-frame frame-persona">
-                  <img
-                    src={personaCommuter}
-                    alt="Persona Profile: The Commuter / Researcher"
-                    className="project-artifact-img"
-                    loading="lazy"
-                  />
-                  <span className="artifact-caption">Persona Profile — The Commuter / Researcher</span>
-                </div>
-
-                <div className="artifact-frame frame-journey">
-                  <img
-                    src={journeyCommuter}
-                    alt="Journey Map: The Commuter / Researcher"
-                    className="project-artifact-img"
-                    loading="lazy"
-                  />
-                  <span className="artifact-caption">Experience Journey Map — Awareness to Daily Usage</span>
-                </div>
-              </div>
+              <PeopleCarousel
+                personaImg={personaCommuter}
+                personaAlt="Persona Profile: The Commuter / Researcher"
+                personaCaption="Persona Profile — The Commuter / Researcher"
+                journeyImg={journeyCommuter}
+                journeyAlt="Journey Map: The Commuter / Researcher"
+                journeyCaption="Experience Journey Map — Awareness to Daily Usage"
+              />
             </article>
 
             {/* Persona 2: The Copycat */}
@@ -341,27 +326,14 @@ export default function Project01Scene({ isActive, onExit }) {
                 </p>
               </header>
 
-              <div className="artifact-gallery-strip">
-                <div className="artifact-frame frame-persona">
-                  <img
-                    src={personaCopycat}
-                    alt="Persona Profile: The Copycat"
-                    className="project-artifact-img"
-                    loading="lazy"
-                  />
-                  <span className="artifact-caption">Persona Profile — The Copycat</span>
-                </div>
-
-                <div className="artifact-frame frame-journey">
-                  <img
-                    src={journeyCopycat}
-                    alt="Journey Map: The Copycat"
-                    className="project-artifact-img"
-                    loading="lazy"
-                  />
-                  <span className="artifact-caption">Experience Journey Map — Referral & Social Rewards</span>
-                </div>
-              </div>
+              <PeopleCarousel
+                personaImg={personaCopycat}
+                personaAlt="Persona Profile: The Copycat"
+                personaCaption="Persona Profile — The Copycat"
+                journeyImg={journeyCopycat}
+                journeyAlt="Journey Map: The Copycat"
+                journeyCaption="Experience Journey Map — Referral & Social Rewards"
+              />
             </article>
           </div>
         </section>
@@ -974,7 +946,7 @@ export default function Project01Scene({ isActive, onExit }) {
 
             <button
               className="exit-spatial-btn"
-              onClick={onExit}
+              onClick={handleTriggerExit}
               aria-label="Continue to Project 02"
             >
               <span>CONTINUE TOWARD PROJECT 02</span>
