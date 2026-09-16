@@ -71,6 +71,7 @@ body {
 }
 
 .spatial-experience.project-active .spatial-gallery-fixed-viewport {
+  display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;

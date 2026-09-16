@@ -22,9 +22,12 @@ import { updateSpatial } from './utils/spatialController';
  */
 export default function App() {
   const [stage, setStage] = useState('intro'); // 'intro' | 'experience'
-  const [activeProject, setActiveProject] = useState(null); // null | 'scotiabank-scene'
+  // Explicit Project 01 Lifecycle: 'CLOSED' | 'OPENING' | 'OPEN' | 'CLOSING'
+  const [projectState, setProjectState] = useState('CLOSED');
   const currentRatioRef = useRef(0);
   const rafIdRef = useRef(null);
+
+  const isProjectActive = projectState !== 'CLOSED';
 
   // Callback when particle intro completes dispersal
   const handleIntroComplete = useCallback(() => {
@@ -33,7 +36,7 @@ export default function App() {
 
   // Lock scroll during intro or while inside full project presentation
   useEffect(() => {
-    if (stage === 'intro' || activeProject) {
+    if (stage === 'intro' || isProjectActive) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
       if (stage === 'intro') {
@@ -43,12 +46,12 @@ export default function App() {
       document.body.style.overflowY = 'auto';
       document.documentElement.style.overflowY = 'auto';
     }
-  }, [stage, activeProject]);
+  }, [stage, isProjectActive]);
 
   // High-performance continuous scroll & camera lerp engine
-  // Zero React state updates during scrolling - directly broadcasts via spatialController
+  // Pauses while Project 01 is active so homepage scroll never conflicts with Project 01
   useEffect(() => {
-    if (stage === 'intro') return;
+    if (stage === 'intro' || isProjectActive) return;
 
     let isRunning = true;
 
@@ -77,28 +80,50 @@ export default function App() {
       isRunning = false;
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     };
-  }, [stage]);
+  }, [stage, isProjectActive]);
 
-  // Enter Project 01
+  // Explicit State Machine: Enter Project 01 (CLOSED -> OPENING)
   const handleEnterProject01 = useCallback(() => {
-    setActiveProject('scotiabank-scene');
+    setProjectState((prev) => {
+      if (prev !== 'CLOSED') return prev; // Prevent duplicate triggers
+      return 'OPENING';
+    });
   }, []);
 
-  // Exit Project 01 and smoothly return to portfolio space, positioned ahead toward Project 02
-  const handleExitProject01 = useCallback(() => {
-    setActiveProject(null);
-    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    // Project 01 focus is 0.16; Project 02 is 0.31; position smoothly at ~0.24
-    const targetScroll = maxScroll * 0.24;
-    window.scrollTo({ top: targetScroll, behavior: 'instant' });
-    currentRatioRef.current = 0.24;
-    updateSpatial(0.24);
+  // Explicit State Machine: Open Wave Complete (OPENING -> OPEN)
+  const handleOpenComplete = useCallback(() => {
+    setProjectState((prev) => {
+      if (prev !== 'OPENING') return prev;
+      return 'OPEN';
+    });
+  }, []);
+
+  // Explicit State Machine: Trigger Exit Wave (OPEN -> CLOSING)
+  const handleTriggerExit = useCallback(() => {
+    setProjectState((prev) => {
+      if (prev !== 'OPEN') return prev; // Ignore if already closing
+      return 'CLOSING';
+    });
+  }, []);
+
+  // Explicit State Machine: Exit Wave Complete (CLOSING -> CLOSED)
+  // Decisively returns to Project 01 focal point (0.16) where Project 02 is completely invisible in deep space
+  const handleExitComplete = useCallback(() => {
+    setProjectState((prev) => {
+      if (prev !== 'CLOSING') return prev;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const targetScroll = maxScroll * 0.16;
+      window.scrollTo({ top: targetScroll, behavior: 'instant' });
+      currentRatioRef.current = 0.16;
+      updateSpatial(0.16);
+      return 'CLOSED';
+    });
   }, []);
 
   const isIntroFinished = stage === 'experience';
 
   return (
-    <main className={`spatial-experience ${activeProject ? 'project-active' : ''}`}>
+    <main className={`spatial-experience ${isProjectActive ? 'project-active' : ''}`}>
       {/* ONE Persistent 3D Spatial Particle Field throughout the Homepage */}
       <ParticleIntro
         onComplete={handleIntroComplete}
@@ -112,12 +137,15 @@ export default function App() {
       <SpatialGallery
         isIntroFinished={isIntroFinished}
         onEnterProject01={handleEnterProject01}
+        isProjectActive={isProjectActive}
       />
 
-      {/* PROJECT 01 IMMERSIVE PRESENTATION: Scotiabank Scene+ */}
+      {/* PROJECT 01 IMMERSIVE PRESENTATION: Scotiabank Scene+ with Isolated Lifecycle */}
       <Project01Scene
-        isActive={activeProject === 'scotiabank-scene'}
-        onExit={handleExitProject01}
+        lifecycleState={projectState}
+        onOpenComplete={handleOpenComplete}
+        onExitTrigger={handleTriggerExit}
+        onExitComplete={handleExitComplete}
       />
 
       {/* 3. ABOUT / APPROACH */}

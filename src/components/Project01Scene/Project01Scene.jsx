@@ -30,36 +30,46 @@ import personaCopycat from '../../assets/projects/scotiabank-scene/persona-copyc
  * Immersive project experience for SCOTIABANK SCENE+.
  * Integrated directly into uxheer.me's spatial universe with dedicated local particles.
  */
-export default function Project01Scene({ isActive, onExit }) {
+export default function Project01Scene({
+  lifecycleState = 'CLOSED', // 'CLOSED' | 'OPENING' | 'OPEN' | 'CLOSING'
+  onOpenComplete,
+  onExitTrigger,
+  onExitComplete,
+}) {
   const containerRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isExiting, setIsExiting] = useState(false);
 
-  // Trigger exit wave transition
+  // Trigger exit wave transition (OPEN -> CLOSING)
   const handleTriggerExit = () => {
-    if (isExiting) return;
-    setIsExiting(true);
+    if (lifecycleState !== 'OPEN') return;
+    if (onExitTrigger) {
+      onExitTrigger();
+    }
   };
 
-  // Focus and scroll to top on enter, keyboard accessibility
+  // Scroll to top on new open lifecycle
   useEffect(() => {
-    if (isActive) {
-      setIsExiting(false);
+    if (lifecycleState === 'OPENING') {
       setScrollProgress(0);
       if (containerRef.current) {
         containerRef.current.scrollTop = 0;
       }
-      
+    }
+  }, [lifecycleState]);
+
+  // Escape key support during OPEN state
+  useEffect(() => {
+    if (lifecycleState === 'OPEN') {
       const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
           handleTriggerExit();
         }
       };
-      
+
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isActive]);
+  }, [lifecycleState]);
 
   // Exclusive local scroll calculation (drives Project01 local particle camera)
   const handleScroll = () => {
@@ -70,37 +80,43 @@ export default function Project01Scene({ isActive, onExit }) {
     setScrollProgress(fraction);
   };
 
-  if (!isActive) return null;
+  if (lifecycleState === 'CLOSED') return null;
 
   const figmaEmbedUrl = "https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FUtscEjwxnDJG6ZstkCHyTY%2FScene---Lo-fi-Wireframes%3Ftype%3Ddesign%26node-id%3D579-3275%26t%3D1QEyExtRq3VOIFyc-1%26scaling%3Dcontain%26page-id%3D0%253A1%26starting-point-node-id%3D579%253A3275";
   const figmaDirectUrl = "https://www.figma.com/proto/UtscEjwxnDJG6ZstkCHyTY/Scene---Lo-fi-Wireframes?type=design&node-id=579-3275&t=1QEyExtRq3VOIFyc-1&scaling=contain&page-id=0%3A1&starting-point-node-id=579%3A3275";
 
   return (
     <div
-      ref={containerRef}
-      className="project-immersive-container"
-      onScroll={handleScroll}
+      className={`project-scene-root state-${lifecycleState.toLowerCase()}`}
       role="region"
       aria-label="Project 01: Scotiabank Scene+"
     >
-      {/* Subtle dismiss trigger */}
+      {/* 1. Viewport-fixed Local 3D Particle Canvas */}
+      <Project01Particles
+        scrollProgress={scrollProgress}
+        lifecycleState={lifecycleState}
+        onOpenComplete={onOpenComplete}
+        onExitComplete={onExitComplete}
+      />
+
+      {/* 2. Sticky Viewport Close Button (Guaranteed fixed to viewport top-right) */}
       <button
         className="project-spatial-dismiss"
         onClick={handleTriggerExit}
         aria-label="Return to portfolio space"
+        type="button"
       >
         <span className="dismiss-icon" aria-hidden="true">✕</span>
         <span className="dismiss-label">RETURN</span>
       </button>
 
-      {/* Local 3D Spatial Particle Cosmos for Project 01 */}
-      <Project01Particles
-        scrollProgress={scrollProgress}
-        isExiting={isExiting}
-        onExitComplete={onExit}
-      />
-
-      <div className="project-immersive-content">
+      {/* 3. Dedicated Content Scroll Viewport */}
+      <div
+        ref={containerRef}
+        className="project-scroll-viewport"
+        onScroll={handleScroll}
+      >
+        <div className="project-immersive-content">
         {/* =================================================================== */}
         {/* PROJECT INTRO */}
         {/* =================================================================== */}
@@ -956,5 +972,6 @@ export default function Project01Scene({ isActive, onExit }) {
         </footer>
       </div>
     </div>
+  </div>
   );
 }

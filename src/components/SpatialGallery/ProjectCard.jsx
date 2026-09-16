@@ -24,8 +24,8 @@ export default function ProjectCard({
   const cardRef = useRef(null);
 
   useEffect(() => {
-    const approachWindow = 0.12;
-    const departWindow = 0.10;
+    const approachWindow = 0.08;
+    const departWindow = 0.07;
 
     return subscribeSpatial((progress) => {
       const el = cardRef.current;

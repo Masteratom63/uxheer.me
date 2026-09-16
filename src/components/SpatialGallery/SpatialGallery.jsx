@@ -11,8 +11,8 @@ import './SpatialGallery.css';
  *  - Scroll 0.42 – 0.68: PROJECT 02 focal stage (centered at 0.54)
  *  - Scroll 0.72 – 1.00: PROJECT 03 focal stage (centered at 0.84)
  */
-export default function SpatialGallery({ isIntroFinished, onEnterProject01 }) {
-  if (!isIntroFinished) {
+export default function SpatialGallery({ isIntroFinished, onEnterProject01, isProjectActive = false }) {
+  if (!isIntroFinished || isProjectActive) {
     return null;
   }
 
@@ -31,7 +31,7 @@ export default function SpatialGallery({ isIntroFinished, onEnterProject01 }) {
       number: 'PROJECT 02',
       title: 'Cognitive Workflow Protocol',
       category: 'AI Architecture',
-      focusPoint: 0.31,
+      focusPoint: 0.34,
       initialTilt: { rx: 1.0, ry: -2.0 },
       artworkType: 'matrix',
       exploreText: 'VIEW PROJECT ARCHIVE',
@@ -40,7 +40,7 @@ export default function SpatialGallery({ isIntroFinished, onEnterProject01 }) {
       number: 'PROJECT 03',
       title: 'Global Capital Exchange',
       category: 'Financial Infrastructure',
-      focusPoint: 0.46,
+      focusPoint: 0.48,
       initialTilt: { rx: -1.0, ry: 1.5 },
       artworkType: 'prism',
       exploreText: 'VIEW PROJECT ARCHIVE',
