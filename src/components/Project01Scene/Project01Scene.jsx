@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { updateSpatial } from '../../utils/spatialController';
 import './Project01Scene.css';
 
 // Project Assets
@@ -28,12 +29,12 @@ import personaCopycat from '../../assets/projects/scotiabank-scene/persona-copyc
  * Immersive project experience for SCOTIABANK SCENE+.
  * Integrated directly into uxheer.me's spatial universe.
  * 
- * Follows the 13-chapter narrative arc:
+ * Narrative sequence:
  *  - Project Intro
  *  - 01: The Question
  *  - 02: We Started with Assumptions
- *  - 03: Research
- *  - 04: People (Personas & Journeys)
+ *  - 03: Research (Methodology & Process)
+ *  - 04: People (Personas & Balanced Journey Maps)
  *  - 05: The Shift
  *  - 06: Building the Experience (Banking, Scene, Explore, Travel)
  *  - 07: Iteration
@@ -41,14 +42,15 @@ import personaCopycat from '../../assets/projects/scotiabank-scene/persona-copyc
  *  - 09: What Changed
  *  - 10: Not Everything Survived (XP System)
  *  - 11: The Final Experience
- *  - 12: Results
- *  - 13: Recognition
+ *  - 12: Prototype (Interactive Figma Embed + Direct Fallback)
+ *  - 13: Results
+ *  - 14: Recognition
  *  - Project Exit -> Continue toward Project 02
  */
 export default function Project01Scene({ isActive, onExit }) {
   const containerRef = useRef(null);
 
-  // Focus and scroll to top on enter, lock body scroll so internal container scrolls smoothly
+  // Focus and scroll to top on enter, keyboard accessibility
   useEffect(() => {
     if (isActive) {
       if (containerRef.current) {
@@ -66,12 +68,27 @@ export default function Project01Scene({ isActive, onExit }) {
     }
   }, [isActive, onExit]);
 
+  // Subtle camera & particle parallax during internal scrolling
+  const handleScroll = () => {
+    const el = containerRef.current;
+    if (!el) return;
+    const maxScroll = Math.max(1, el.scrollHeight - el.clientHeight);
+    const fraction = Math.min(1, Math.max(0, el.scrollTop / maxScroll));
+    // Gently glide spatial camera through 0.16 to 0.24 for live background particle parallax
+    const subRatio = 0.16 + fraction * 0.08;
+    updateSpatial(subRatio);
+  };
+
   if (!isActive) return null;
+
+  const figmaEmbedUrl = "https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FUtscEjwxnDJG6ZstkCHyTY%2FScene---Lo-fi-Wireframes%3Ftype%3Ddesign%26node-id%3D579-3275%26t%3D1QEyExtRq3VOIFyc-1%26scaling%3Dcontain%26page-id%3D0%253A1%26starting-point-node-id%3D579%253A3275";
+  const figmaDirectUrl = "https://www.figma.com/proto/UtscEjwxnDJG6ZstkCHyTY/Scene---Lo-fi-Wireframes?type=design&node-id=579-3275&t=1QEyExtRq3VOIFyc-1&scaling=contain&page-id=0%3A1&starting-point-node-id=579%3A3275";
 
   return (
     <div
       ref={containerRef}
       className="project-immersive-container"
+      onScroll={handleScroll}
       role="region"
       aria-label="Project 01: Scotiabank Scene+"
     >
@@ -87,7 +104,7 @@ export default function Project01Scene({ isActive, onExit }) {
 
       <div className="project-immersive-content">
         {/* =================================================================== */}
-        {/* PROJECT INTRO (Section 8) */}
+        {/* PROJECT INTRO */}
         {/* =================================================================== */}
         <header className="project-chapter intro-chapter">
           <div className="project-intro-brand-row">
@@ -108,14 +125,15 @@ export default function Project01Scene({ isActive, onExit }) {
             Reimagining a banking experience for a younger generation.
           </p>
 
-          <div className="project-scroll-cue" aria-hidden="true">
-            <span className="scroll-cue-line" />
-            <span className="scroll-cue-text">SCROLL TO EXPLORE</span>
+          {/* Minimal Vertical Scroll Prompt (Exact match to homepage language) */}
+          <div className="project-vertical-scroll-cue" aria-hidden="true">
+            <span className="minimal-scroll-text">SCROLL</span>
+            <span className="minimal-scroll-line" />
           </div>
         </header>
 
         {/* =================================================================== */}
-        {/* CHAPTER 01 — THE QUESTION (Section 9) */}
+        {/* CHAPTER 01 — THE QUESTION */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-question">
           <div className="chapter-marker">
@@ -140,7 +158,7 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 02 — WE STARTED WITH ASSUMPTIONS (Section 10) */}
+        {/* CHAPTER 02 — WE STARTED WITH ASSUMPTIONS */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-assumptions">
           <div className="chapter-marker">
@@ -183,7 +201,7 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 03 — RESEARCH (Section 11) */}
+        {/* CHAPTER 03 — RESEARCH (Reworked: Methodology & Process) */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-research">
           <div className="chapter-marker">
@@ -191,21 +209,57 @@ export default function Project01Scene({ isActive, onExit }) {
             <span className="chapter-label">RESEARCH</span>
           </div>
 
-          <div className="metrics-triad">
-            <div className="metric-cell">
-              <span className="metric-number">33</span>
-              <span className="metric-label">Survey responses</span>
+          <h3 className="research-process-title">How we looked</h3>
+          <p className="section-lead-para">
+            We investigated early financial habits through a structured discovery process—moving from broad inquiries to deep qualitative insights and behavioral synthesis.
+          </p>
+
+          {/* Structured Research Methodology Sequence */}
+          <div className="research-methodology-track">
+            <div className="method-step-card">
+              <span className="method-step-num">01</span>
+              <h4 className="method-step-name">SURVEY</h4>
+              <span className="method-step-metric">33 Responses</span>
+              <p className="method-step-desc">
+                Quantitative mapping of primary banking apps, spending habits, and reward awareness.
+              </p>
             </div>
-            <div className="metric-cell">
-              <span className="metric-number">12</span>
-              <span className="metric-label">In-depth interviews</span>
+
+            <div className="method-track-arrow" aria-hidden="true">→</div>
+
+            <div className="method-step-card">
+              <span className="method-step-num">02</span>
+              <h4 className="method-step-name">INTERVIEWS</h4>
+              <span className="method-step-metric">12 In-depth Sessions</span>
+              <p className="method-step-desc">
+                One-on-one sessions exploring financial trade-offs, anxieties, and daily routines.
+              </p>
             </div>
-            <div className="metric-cell">
-              <span className="metric-number">18–24</span>
-              <span className="metric-label">Primary demographic</span>
+
+            <div className="method-track-arrow" aria-hidden="true">→</div>
+
+            <div className="method-step-card">
+              <span className="method-step-num">03</span>
+              <h4 className="method-step-name">PATTERNS</h4>
+              <span className="method-step-metric">Behavior Synthesis</span>
+              <p className="method-step-desc">
+                Uncovering mental budgeting shortcuts, transit costs, and guilt around non-essential spend.
+              </p>
+            </div>
+
+            <div className="method-track-arrow" aria-hidden="true">→</div>
+
+            <div className="method-step-card">
+              <span className="method-step-num">04</span>
+              <h4 className="method-step-name">DESIGN QUESTIONS</h4>
+              <span className="method-step-metric">Opportunity Framing</span>
+              <p className="method-step-desc">
+                Translating behavioral friction into daily value: transit rewards, liquid points, and clarity.
+              </p>
             </div>
           </div>
 
+          {/* Research Findings */}
           <div className="research-findings-stream">
             <div className="finding-row">
               <span className="finding-bullet" />
@@ -231,7 +285,7 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 04 — PEOPLE (Section 12) */}
+        {/* CHAPTER 04 — PEOPLE (Balanced Desktop Gallery + Clean Mobile Stack) */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-people">
           <div className="chapter-marker">
@@ -240,7 +294,7 @@ export default function Project01Scene({ isActive, onExit }) {
           </div>
 
           <p className="section-lead-para">
-            Synthesized research into two core personas representing different behavioural archetypes and daily friction points.
+            Synthesized research into two core personas representing different behavioral archetypes and friction points.
           </p>
 
           <div className="personas-deep-dive">
@@ -254,8 +308,8 @@ export default function Project01Scene({ isActive, onExit }) {
                 </p>
               </header>
 
-              <div className="artifact-pair">
-                <div className="artifact-frame">
+              <div className="artifact-gallery-strip">
+                <div className="artifact-frame frame-persona">
                   <img
                     src={personaCommuter}
                     alt="Persona Profile: The Commuter / Researcher"
@@ -265,7 +319,7 @@ export default function Project01Scene({ isActive, onExit }) {
                   <span className="artifact-caption">Persona Profile — The Commuter / Researcher</span>
                 </div>
 
-                <div className="artifact-frame">
+                <div className="artifact-frame frame-journey">
                   <img
                     src={journeyCommuter}
                     alt="Journey Map: The Commuter / Researcher"
@@ -287,8 +341,8 @@ export default function Project01Scene({ isActive, onExit }) {
                 </p>
               </header>
 
-              <div className="artifact-pair">
-                <div className="artifact-frame">
+              <div className="artifact-gallery-strip">
+                <div className="artifact-frame frame-persona">
                   <img
                     src={personaCopycat}
                     alt="Persona Profile: The Copycat"
@@ -298,7 +352,7 @@ export default function Project01Scene({ isActive, onExit }) {
                   <span className="artifact-caption">Persona Profile — The Copycat</span>
                 </div>
 
-                <div className="artifact-frame">
+                <div className="artifact-frame frame-journey">
                   <img
                     src={journeyCopycat}
                     alt="Journey Map: The Copycat"
@@ -313,7 +367,7 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 05 — THE SHIFT (Section 13) */}
+        {/* CHAPTER 05 — THE SHIFT */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-shift">
           <div className="chapter-marker">
@@ -353,7 +407,7 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 06 — BUILDING THE EXPERIENCE (Section 14) */}
+        {/* CHAPTER 06 — BUILDING THE EXPERIENCE */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-pillars">
           <div className="chapter-marker">
@@ -466,7 +520,7 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 07 — ITERATION (Section 15) */}
+        {/* CHAPTER 07 — ITERATION */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-iteration">
           <div className="chapter-marker">
@@ -526,7 +580,7 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 08 — TESTING (Section 16) */}
+        {/* CHAPTER 08 — TESTING */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-testing">
           <div className="chapter-marker">
@@ -553,7 +607,7 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 09 — WHAT CHANGED (Section 17) */}
+        {/* CHAPTER 09 — WHAT CHANGED */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-changes">
           <div className="chapter-marker">
@@ -601,7 +655,7 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 10 — NOT EVERYTHING SURVIVED (Section 18) */}
+        {/* CHAPTER 10 — NOT EVERYTHING SURVIVED */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-survived">
           <div className="chapter-marker">
@@ -648,7 +702,7 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 11 — THE FINAL EXPERIENCE (Section 19) */}
+        {/* CHAPTER 11 — THE FINAL EXPERIENCE */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-final-climax">
           <div className="chapter-marker">
@@ -816,11 +870,50 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 12 — RESULTS (Section 20) */}
+        {/* CHAPTER 12 — PROTOTYPE (Interactive Figma Embed & Direct Launch) */}
+        {/* =================================================================== */}
+        <section className="project-chapter chapter-prototype">
+          <div className="chapter-marker">
+            <span className="chapter-num">12</span>
+            <span className="chapter-label">PROTOTYPE</span>
+          </div>
+
+          <div className="prototype-header-row">
+            <div>
+              <h2 className="prototype-headline">EXPERIENCE THE FINAL PRODUCT</h2>
+              <p className="prototype-lead">
+                Explore the final Scene+ experience through the interactive prototype.
+              </p>
+            </div>
+
+            <a
+              href={figmaDirectUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="prototype-external-link"
+            >
+              <span>EXPLORE THE PROTOTYPE</span>
+              <span className="link-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div className="prototype-embed-container">
+            <iframe
+              className="prototype-figma-iframe"
+              title="Scotiabank Scene+ Interactive Prototype"
+              src={figmaEmbedUrl}
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* CHAPTER 13 — RESULTS */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-results">
           <div className="chapter-marker">
-            <span className="chapter-num">12</span>
+            <span className="chapter-num">13</span>
             <span className="chapter-label">RESULTS</span>
           </div>
 
@@ -841,11 +934,11 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* CHAPTER 13 — RECOGNITION (Section 21) */}
+        {/* CHAPTER 14 — RECOGNITION */}
         {/* =================================================================== */}
         <section className="project-chapter chapter-recognition">
           <div className="chapter-marker">
-            <span className="chapter-num">13</span>
+            <span className="chapter-num">14</span>
             <span className="chapter-label">RECOGNITION</span>
           </div>
 
@@ -869,7 +962,7 @@ export default function Project01Scene({ isActive, onExit }) {
         </section>
 
         {/* =================================================================== */}
-        {/* PROJECT EXIT (Section 22) */}
+        {/* PROJECT EXIT */}
         {/* =================================================================== */}
         <footer className="project-chapter project-exit-chapter">
           <div className="exit-spatial-wrapper">
