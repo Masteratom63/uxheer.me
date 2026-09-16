@@ -275,13 +275,14 @@ export default function Project01Particles({
               alpha = Math.min(1.0, alpha * (1 + waveIntensity * 1.2) + 0.28);
             }
 
-            // Smooth outward dispersal behind the wave crest
+            // Behind the wave crest: particles seamlessly settle into the calm home arrangement
+            // Eliminates empty black void and ensures home particles are already present
             if (distFromCenter < exitWaveRadius) {
-              const flushedDist = exitWaveRadius - distFromCenter;
-              const flushPush = Math.min(flushedDist * 1.2, 260);
-              screenX += Math.cos(angle) * flushPush;
-              screenY += Math.sin(angle) * flushPush;
-              alpha = Math.max(0, alpha * (1 - flushedDist / 160));
+              const settleRatio = Math.min(1.0, (exitWaveRadius - distFromCenter) / 220);
+              const settlePush = (1 - settleRatio) * 50;
+              screenX += Math.cos(angle) * settlePush;
+              screenY += Math.sin(angle) * settlePush;
+              alpha = p.baseAlpha * (0.65 + 0.35 * settleRatio) * nearFade * farFade * Math.min(scale * 1.3, 1.0);
             }
           }
 

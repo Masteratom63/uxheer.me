@@ -137,7 +137,7 @@ export default function App() {
       <SpatialGallery
         isIntroFinished={isIntroFinished}
         onEnterProject01={handleEnterProject01}
-        isProjectActive={isProjectActive}
+        projectState={projectState}
       />
 
       {/* PROJECT 01 IMMERSIVE PRESENTATION: Scotiabank Scene+ with Isolated Lifecycle */}

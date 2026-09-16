@@ -78,7 +78,8 @@ body {
   pointer-events: none !important;
 }
 
-.spatial-experience.project-active .spatial-gallery-fixed-viewport {
+.spatial-experience.project-open .spatial-gallery-fixed-viewport,
+.spatial-experience.project-opening .spatial-gallery-fixed-viewport {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;

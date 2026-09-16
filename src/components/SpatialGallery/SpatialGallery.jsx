@@ -11,10 +11,18 @@ import './SpatialGallery.css';
  *  - Scroll 0.42 – 0.68: PROJECT 02 focal stage (centered at 0.54)
  *  - Scroll 0.72 – 1.00: PROJECT 03 focal stage (centered at 0.84)
  */
-export default function SpatialGallery({ isIntroFinished, onEnterProject01, isProjectActive = false }) {
-  if (!isIntroFinished || isProjectActive) {
+export default function SpatialGallery({ isIntroFinished, onEnterProject01, projectState = 'CLOSED' }) {
+  if (!isIntroFinished) {
     return null;
   }
+
+  // During active reading (OPEN), hide gallery completely
+  if (projectState === 'OPEN') {
+    return null;
+  }
+
+  const isClosing = projectState === 'CLOSING';
+  const isOpening = projectState === 'OPENING';
 
   const projects = [
     {
@@ -48,7 +56,11 @@ export default function SpatialGallery({ isIntroFinished, onEnterProject01, isPr
   ];
 
   return (
-    <div className="spatial-gallery-fixed-viewport" aria-label="Work Gallery">
+    <div
+      className={`spatial-gallery-fixed-viewport ${isClosing ? 'gallery-closing' : ''} ${isOpening ? 'gallery-opening' : ''}`}
+      aria-label="Work Gallery"
+      style={isOpening ? { opacity: 0, pointerEvents: 'none', display: 'none' } : undefined}
+    >
       <div className="spatial-gallery-stage">
         {projects.map((item) => (
           <ProjectCard
