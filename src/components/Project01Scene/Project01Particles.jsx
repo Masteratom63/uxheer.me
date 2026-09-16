@@ -171,12 +171,14 @@ export default function Project01Particles({
       }
 
       // -------------------------------------------------------------
-      // Phase 2: Prominent Spherical Wave Exit (0.0s to 1.35s - Identical Timing)
+      // Phase 2: Prominent Spherical Wave Exit & Crossfade (0.0s to 1.80s)
       // -------------------------------------------------------------
       let exitProgress = 0.0;
+      let exitWaveProgress = 0.0;
       if (currentLifecycle === 'CLOSING' && state.exitStartTime) {
         const exitElapsed = (timestamp - state.exitStartTime) / 1000;
-        exitProgress = Math.min(1.0, exitElapsed / 1.35);
+        exitProgress = Math.min(1.0, exitElapsed / 1.80);
+        exitWaveProgress = Math.min(1.0, exitElapsed / 1.25);
 
         if (exitProgress >= 1.0 && !state.exitNotified) {
           state.exitNotified = true;
@@ -189,7 +191,7 @@ export default function Project01Particles({
 
       // Dynamic wavefront radii (Identical smooth fast-out wavefront expansion)
       const enterWaveRadius = Math.pow(openProgress, 0.75) * maxRadius;
-      const exitWaveRadius = Math.pow(exitProgress, 0.75) * maxRadius;
+      const exitWaveRadius = Math.pow(exitWaveProgress, 0.75) * maxRadius;
 
       const fov = 580;
 

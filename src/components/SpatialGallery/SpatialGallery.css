@@ -357,29 +357,32 @@
 /* Smooth Card Return Settle on Project 01 Exit */
 .spatial-gallery-fixed-viewport.gallery-closing {
   display: flex !important;
-  opacity: 1 !important;
+  opacity: 0 !important;
   visibility: visible !important;
   pointer-events: none !important;
+  animation: gallerySmoothFadeIn 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards !important;
 }
 
 .spatial-gallery-fixed-viewport.gallery-closing .spatial-project-wrapper.project-project-01 {
-  opacity: 0 !important;
-  animation: cardReturnSettle 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.65s forwards !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+  transform: translate3d(-50%, -50%, 0) translate3d(0, 0, 0px) scale(1) !important;
 }
 
 .spatial-gallery-fixed-viewport.gallery-closing .spatial-project-wrapper:not(.project-project-01) {
   opacity: 0 !important;
+  display: none !important;
   pointer-events: none !important;
 }
 
-@keyframes cardReturnSettle {
+@keyframes gallerySmoothFadeIn {
   from {
     opacity: 0;
-    transform: translate3d(-50%, -50%, 0) translate3d(0, 0, -320px) scale(0.92);
+    transform: scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translate3d(-50%, -50%, 0) translate3d(0, 0, 0px) scale(1);
+    transform: scale(1);
   }
 }
 

@@ -102,18 +102,21 @@ export default function App() {
   const handleTriggerExit = useCallback(() => {
     setProjectState((prev) => {
       if (prev !== 'OPEN') return prev; // Ignore if already closing
+      // Immediately pre-position homepage scroll and spatial frame to 0.16
+      // so the gallery card and particle field are ready behind the scenes for the crossfade
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const targetScroll = maxScroll * 0.16;
+      window.scrollTo({ top: targetScroll, behavior: 'instant' });
+      currentRatioRef.current = 0.16;
+      updateSpatial(0.16);
       return 'CLOSING';
     });
   }, []);
 
   // Explicit State Machine: Exit Wave Complete (CLOSING -> CLOSED)
-  // Decisively returns to Project 01 focal point (0.16) where Project 02 is completely invisible in deep space
   const handleExitComplete = useCallback(() => {
     setProjectState((prev) => {
       if (prev !== 'CLOSING') return prev;
-      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      const targetScroll = maxScroll * 0.16;
-      window.scrollTo({ top: targetScroll, behavior: 'instant' });
       currentRatioRef.current = 0.16;
       updateSpatial(0.16);
       return 'CLOSED';

@@ -101,6 +101,26 @@
   pointer-events: auto;
 }
 
+.project-scene-root.state-closing {
+  pointer-events: none;
+  animation: projectSceneFadeOut 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+}
+
+@keyframes projectSceneFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.project-scene-root.state-closing .project-spatial-dismiss {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
 .project-scene-root.state-closing .project-scroll-viewport {
   opacity: 0;
   pointer-events: none;
