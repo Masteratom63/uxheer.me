@@ -60,7 +60,6 @@
   letter-spacing: -0.03em;
   line-height: 1.1;
   color: #ffffff;
-  pointer-events: auto;
   touch-action: manipulation;
   transition: all 0.25s ease;
   position: relative;

@@ -19,11 +19,15 @@ export default function Contact({ isIntroFinished }) {
       if (!el) return;
 
       if (scrollRatio < 0.82) {
+        el.style.display = 'none';
+        el.style.visibility = 'hidden';
         el.style.opacity = 0;
         el.style.pointerEvents = 'none';
         return;
       }
 
+      el.style.display = 'flex';
+      el.style.visibility = 'visible';
       const entryProgress = Math.min(1, (scrollRatio - 0.82) / 0.11);
       const opacity = Math.max(0, entryProgress);
       const z = (1 - entryProgress) * -400;
@@ -43,7 +47,7 @@ export default function Contact({ isIntroFinished }) {
     <section
       ref={rootRef}
       className="spatial-contact-screen"
-      style={{ opacity: 0, pointerEvents: 'none' }}
+      style={{ display: 'none', visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}
       aria-label="Contact"
     >
       <div className="contact-editorial-wrapper">
@@ -53,6 +57,8 @@ export default function Contact({ isIntroFinished }) {
 
         <a
           href="mailto:heer@uxheer.me"
+          target="_blank"
+          rel="noopener noreferrer"
           className="contact-main-cta"
           aria-label="Let's talk - Email Heer Patel"
         >
@@ -78,6 +84,8 @@ export default function Contact({ isIntroFinished }) {
         <div className="contact-details-row">
           <a
             href="mailto:heer@uxheer.me"
+            target="_blank"
+            rel="noopener noreferrer"
             className="contact-detail-item"
             aria-label="Email: heer@uxheer.me"
           >

@@ -155,9 +155,9 @@ export default function Project01Particles({
       const targetZ = scrollProgressRef.current * travelDistance;
       // Fast, stable spatial settling (particles freeze when scrolling stops)
       state.camZ += (targetZ - state.camZ) * 0.09;
-      // Subtle organic lateral camera curvature
-      state.camX = Math.sin(scrollProgressRef.current * Math.PI * 2) * 85;
-      state.camY = Math.cos(scrollProgressRef.current * Math.PI * 1.5) * 55;
+      // Keep camera centered: ensures strictly monotonic forward expansion when scrolling down
+      state.camX = 0;
+      state.camY = 0;
 
       ctx.clearRect(0, 0, w, h);
 
@@ -178,12 +178,12 @@ export default function Project01Particles({
       }
 
       // -------------------------------------------------------------
-      // Phase 2: Spherical Wave Exit (0.0s to 0.90s)
+      // Phase 2: Spherical Wave Exit (0.0s to 1.35s - Exact Match to Entry)
       // -------------------------------------------------------------
       let exitProgress = 0.0;
       if (currentLifecycle === 'CLOSING' && state.exitStartTime) {
         const exitElapsed = (timestamp - state.exitStartTime) / 1000;
-        exitProgress = Math.min(1.0, exitElapsed / 0.90);
+        exitProgress = Math.min(1.0, exitElapsed / 1.35);
 
         if (exitProgress >= 1.0 && !state.exitNotified) {
           state.exitNotified = true;
@@ -194,11 +194,9 @@ export default function Project01Particles({
         }
       }
 
-      // Dynamic wavefront radii
-      // Entry: smooth fast-out wavefront expansion
+      // Dynamic wavefront radii (Identical smooth fast-out wavefront expansion)
       const enterWaveRadius = Math.pow(openProgress, 0.75) * maxRadius;
-      // Exit: accelerating outward flush
-      const exitWaveRadius = Math.pow(exitProgress, 1.25) * maxRadius;
+      const exitWaveRadius = Math.pow(exitProgress, 0.75) * maxRadius;
 
       const fov = 580;
 
@@ -223,8 +221,8 @@ export default function Project01Particles({
           const totalZ = relZ + fov;
           let scale = fov / totalZ;
 
-          let screenX = (curX - state.camX) * scale + centerX;
-          let screenY = (curY - state.camY) * scale + centerY;
+          let screenX = curX * scale + centerX;
+          let screenY = curY * scale + centerY;
 
           const distFromCenter = Math.hypot(screenX - centerX, screenY - centerY);
           const angle = Math.atan2(screenY - centerY, screenX - centerX);
@@ -236,7 +234,7 @@ export default function Project01Particles({
           let radius = p.baseRadius * scale;
 
           // -----------------------------------------------------------
-          // Visible Spherical Wave Arrival Physics
+          // Visible Spherical Wave Arrival Physics (Home -> Project 1)
           // -----------------------------------------------------------
           if (currentLifecycle === 'OPENING' && openProgress < 1.0) {
             const waveDistDiff = Math.abs(distFromCenter - enterWaveRadius);
@@ -263,17 +261,31 @@ export default function Project01Particles({
           }
 
           // -----------------------------------------------------------
-          // Visible Spherical Wave Departure Physics
+          // Exact Same Spherical Wave Departure Physics (Project 1 -> Home)
           // -----------------------------------------------------------
-          if (currentLifecycle === 'CLOSING') {
+          if (currentLifecycle === 'CLOSING' && exitProgress < 1.0) {
+            const waveDistDiff = Math.abs(distFromCenter - exitWaveRadius);
+            const bandWidth = 140;
+
+            if (waveDistDiff < bandWidth) {
+              const waveIntensity = 1 - waveDistDiff / bandWidth;
+              // Substantial outward displacement along radial vector (identical to enter wave)
+              const wavePush = Math.pow(waveIntensity, 1.5) * 160;
+              screenX += Math.cos(angle) * wavePush;
+              screenY += Math.sin(angle) * wavePush;
+              // Scale boost and luminosity boost along wave crest
+              scale *= (1 + waveIntensity * 1.25);
+              radius *= (1 + waveIntensity * 1.25);
+              alpha = Math.min(1.0, alpha * (1 + waveIntensity * 1.1) + 0.2);
+            }
+
+            // Particles inside the wave crest flush outward and disperse
             if (distFromCenter < exitWaveRadius) {
               const flushedDist = exitWaveRadius - distFromCenter;
-              // Accelerating radial flush toward edge of viewport
-              const flushPush = Math.min(flushedDist * 1.4 + 40, 320);
+              const flushPush = Math.min(flushedDist * 1.2, 240);
               screenX += Math.cos(angle) * flushPush;
               screenY += Math.sin(angle) * flushPush;
-              // Fade out into depth
-              alpha = Math.max(0, alpha * (1 - flushedDist / 200) * (1 - exitProgress * 1.1));
+              alpha = Math.max(0, alpha * (1 - flushedDist / 160));
             }
           }
 
