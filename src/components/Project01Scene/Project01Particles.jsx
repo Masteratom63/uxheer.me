@@ -3,18 +3,17 @@ import React, { useEffect, useRef } from 'react';
 /**
  * Project01Particles Component
  * 
- * Dedicated 3D spatial particle corridor for Project 01: Scotiabank Scene+.
+ * Dedicated 3D spatial particle environment for Project 01: Scotiabank Scene+.
  * 
  * Key Architecture:
- *  1. Non-Wrapping Linear Depth Corridor:
- *     Particles are distributed along a continuous depth track (0 to 18,000px).
- *     Camera depth (camZ) strictly advances forward as the user scrolls down.
- *     Particles pass the camera and stay behind the camera. ZERO modulo wrapping.
- *     Eliminates any backward particle snapping across sections.
- *  2. Symmetrical Spherical Waves:
- *     - Entry Wave: Radial disturbance sweeps outward across the field (0.0s to 1.35s).
- *     - Exit Wave: Identical radial disturbance sweeps outward across the field (0.0s to 1.35s)
- *       while the homepage cosmos seamlessly materializes beneath the wave.
+ *  1. Prominent Symmetrical Circular Waves:
+ *     - Entry Wave (0.0s to 1.35s): High-displacement circular wave sweeps across 260 particles.
+ *     - Exit Wave (0.0s to 1.35s): EXACT SAME high-displacement circular wave sweeps across the field,
+ *       flushing Project 01 particles outward while the homepage cosmos smoothly materializes beneath it.
+ *  2. Pure Forward 3D Travel (No Snap-Backs):
+ *     - Camera centered (camX=0, camY=0) prevents lateral oscillation.
+ *     - Soft near/far alpha zero-clipping ensures particles fade out completely before the lens (relZ <= 50)
+ *       and fade in completely from deep fog (relZ >= 3000). Zero visual snapping or pop-ins.
  */
 export default function Project01Particles({
   scrollProgress = 0,
@@ -71,9 +70,9 @@ export default function Project01Particles({
     if (ctx) ctx.scale(dpr, dpr);
 
     const isMobile = width <= 640;
-    const particleCount = isMobile ? 180 : 360;
-    // Continuous non-wrapping corridor track across entire case study
-    const totalTrackDepth = 18000;
+    // Dense particle field ensures the circular wave is rich and prominent across the screen
+    const particleCount = isMobile ? 130 : 260;
+    const totalDepth = 3600;
 
     const particles = [];
     const spreadX = width * 1.5;
@@ -99,8 +98,7 @@ export default function Project01Particles({
 
       const worldX = (Math.random() - 0.5) * spreadX;
       const worldY = (Math.random() - 0.5) * spreadY;
-      // Uniformly distributed along the full corridor
-      const worldZ = Math.random() * totalTrackDepth;
+      const worldZ = Math.random() * totalDepth;
 
       const baseRadius = isMobile ? (1.0 + Math.random() * 1.4) : (1.1 + Math.random() * 1.8);
       const baseAlpha = 0.35 + Math.random() * 0.45;
@@ -148,8 +146,8 @@ export default function Project01Particles({
         state.exitStartTime = timestamp;
       }
 
-      // Linear Corridor Travel Distance (0 to 15,500px)
-      const travelDistance = 15500;
+      // 3D Travel Depth tied directly to Project 01 scroll
+      const travelDistance = totalDepth - 800;
       const targetZ = scrollProgressRef.current * travelDistance;
       // Stable forward camera travel (freezes in place when scrolling stops)
       state.camZ += (targetZ - state.camZ) * 0.09;
@@ -157,7 +155,7 @@ export default function Project01Particles({
       ctx.clearRect(0, 0, w, h);
 
       // -------------------------------------------------------------
-      // Phase 1: Spherical Wave Entry (0.0s to 1.35s)
+      // Phase 1: Prominent Spherical Wave Entry (0.0s to 1.35s)
       // -------------------------------------------------------------
       let openProgress = 1.0;
       if (currentLifecycle === 'OPENING') {
@@ -173,7 +171,7 @@ export default function Project01Particles({
       }
 
       // -------------------------------------------------------------
-      // Phase 2: Spherical Wave Exit (0.0s to 1.35s - Identical Timing)
+      // Phase 2: Prominent Spherical Wave Exit (0.0s to 1.35s - Identical Timing)
       // -------------------------------------------------------------
       let exitProgress = 0.0;
       if (currentLifecycle === 'CLOSING' && state.exitStartTime) {
@@ -209,12 +207,11 @@ export default function Project01Particles({
         const entryZOffset = (1 - openProgress) * p.entryDepthOffset;
         const curZ = p.worldZ + entryZOffset;
 
-        // PURE LINEAR CORRIDOR DEPTH:
-        // No modulo wrapping! As particles pass the camera (relZ <= 10), they stay behind!
-        const relZ = curZ - state.camZ;
+        // Relative Z to Camera (smooth wrapping with strict zero-opacity bounds)
+        const relZ = ((curZ - state.camZ) % totalDepth + totalDepth) % totalDepth;
 
-        // Only process particles ahead of camera and within visible depth fog
-        if (relZ > 10 && relZ < 3200) {
+        // Strictly discard invisible particles outside active visual range
+        if (relZ > 50 && relZ < 3000) {
           const totalZ = relZ + fov;
           let scale = fov / totalZ;
 
@@ -224,60 +221,67 @@ export default function Project01Particles({
           const distFromCenter = Math.hypot(screenX - centerX, screenY - centerY);
           const angle = Math.atan2(screenY - centerY, screenX - centerX);
 
-          // Authentic depth attenuation & fog clipping
-          const nearFade = relZ < 140 ? (relZ / 140) : 1.0;
-          const farFade = relZ > 2400 ? Math.max(0, 1 - (relZ - 2400) / 800) : 1.0;
+          // Zero-opacity fade bounds:
+          // Particles fade to 0 before lens (relZ <= 50) and fade in from 0 at 3000
+          // Zero sudden popping or snapping!
+          const nearFade = relZ < 160 ? Math.max(0, (relZ - 50) / 110) : 1.0;
+          const farFade = relZ > 2200 ? Math.max(0, (3000 - relZ) / 800) : 1.0;
           let alpha = p.baseAlpha * nearFade * farFade * Math.min(scale * 1.3, 1.0);
           let radius = p.baseRadius * scale;
 
           // -----------------------------------------------------------
-          // Spherical Wave Arrival Physics (Home -> Project 1)
+          // Prominent Spherical Wave Arrival Physics (Home -> Project 1)
           // -----------------------------------------------------------
           if (currentLifecycle === 'OPENING' && openProgress < 1.0) {
             const waveDistDiff = Math.abs(distFromCenter - enterWaveRadius);
-            const bandWidth = 140;
+            const bandWidth = 150;
 
             if (waveDistDiff < bandWidth) {
               const waveIntensity = 1 - waveDistDiff / bandWidth;
-              const wavePush = Math.pow(waveIntensity, 1.5) * 160;
+              // Substantial outward displacement along radial vector
+              const wavePush = Math.pow(waveIntensity, 1.5) * 180;
               screenX += Math.cos(angle) * wavePush;
               screenY += Math.sin(angle) * wavePush;
-              scale *= (1 + waveIntensity * 1.25);
-              radius *= (1 + waveIntensity * 1.25);
-              alpha = Math.min(1.0, alpha * (1 + waveIntensity * 1.1) + 0.2);
+              // Scale boost and luminosity boost along wave crest
+              scale *= (1 + waveIntensity * 1.35);
+              radius *= (1 + waveIntensity * 1.35);
+              alpha = Math.min(1.0, alpha * (1 + waveIntensity * 1.2) + 0.28);
             }
 
+            // Particles ahead of the wave remain waiting; settle in after wave crest passes
             if (distFromCenter > enterWaveRadius) {
               const outsideDist = distFromCenter - enterWaveRadius;
               const fadeRatio = Math.max(0, 1 - outsideDist / 160);
-              alpha *= (0.2 + 0.8 * fadeRatio);
+              alpha *= (0.25 + 0.75 * fadeRatio);
             }
           }
 
           // -----------------------------------------------------------
-          // Identical Spherical Wave Departure Physics (Project 1 -> Home)
+          // EXACT SAME Prominent Spherical Wave Departure Physics (Project 1 -> Home)
           // -----------------------------------------------------------
           if (currentLifecycle === 'CLOSING' && exitProgress < 1.0) {
             const waveDistDiff = Math.abs(distFromCenter - exitWaveRadius);
-            const bandWidth = 140;
+            const bandWidth = 150;
 
             if (waveDistDiff < bandWidth) {
               const waveIntensity = 1 - waveDistDiff / bandWidth;
-              const wavePush = Math.pow(waveIntensity, 1.5) * 160;
+              // Identical substantial outward displacement along radial vector
+              const wavePush = Math.pow(waveIntensity, 1.5) * 180;
               screenX += Math.cos(angle) * wavePush;
               screenY += Math.sin(angle) * wavePush;
-              scale *= (1 + waveIntensity * 1.25);
-              radius *= (1 + waveIntensity * 1.25);
-              alpha = Math.min(1.0, alpha * (1 + waveIntensity * 1.1) + 0.2);
+              // Identical scale boost and luminosity boost along wave crest
+              scale *= (1 + waveIntensity * 1.35);
+              radius *= (1 + waveIntensity * 1.35);
+              alpha = Math.min(1.0, alpha * (1 + waveIntensity * 1.2) + 0.28);
             }
 
             // Smooth outward dispersal behind the wave crest
             if (distFromCenter < exitWaveRadius) {
               const flushedDist = exitWaveRadius - distFromCenter;
-              const flushPush = Math.min(flushedDist * 1.1, 220);
+              const flushPush = Math.min(flushedDist * 1.2, 260);
               screenX += Math.cos(angle) * flushPush;
               screenY += Math.sin(angle) * flushPush;
-              alpha = Math.max(0, alpha * (1 - flushedDist / 180));
+              alpha = Math.max(0, alpha * (1 - flushedDist / 160));
             }
           }
 
@@ -291,9 +295,9 @@ export default function Project01Particles({
 
             // Luminous halo for cyan / mint accent particles
             if (p.isAccent && radius >= 1.5) {
-              ctx.globalAlpha = alpha * 0.28;
+              ctx.globalAlpha = alpha * 0.32;
               ctx.beginPath();
-              ctx.arc(screenX, screenY, radius * 2.2, 0, Math.PI * 2);
+              ctx.arc(screenX, screenY, radius * 2.3, 0, Math.PI * 2);
               ctx.fill();
             }
           }
