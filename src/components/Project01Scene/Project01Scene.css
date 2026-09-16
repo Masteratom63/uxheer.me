@@ -1,0 +1,1037 @@
+/* ===================================================================
+   Project01Scene — Scotiabank Scene+ Immersive Project Experience
+   Visual System: #050711 base, #00D1FF cyan accent, #14FF00 green accent
+   Mobile-first, editorial typography, spatial restraint, generous space
+   =================================================================== */
+
+.project-immersive-container {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(5, 7, 17, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #f1f3f9;
+  font-family: inherit;
+  opacity: 1;
+  animation: projectFadeIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+@keyframes projectFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.project-immersive-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 10rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .project-immersive-content {
+    padding: 7rem 3rem 12rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .project-immersive-content {
+    padding: 8rem 4rem 14rem;
+  }
+}
+
+/* -------------------------------------------------------------------
+   Subtle Dismiss Button (Understated spatial return)
+   ------------------------------------------------------------------- */
+.project-spatial-dismiss {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 120;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  background: rgba(14, 18, 36, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #a0aec0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+}
+
+.project-spatial-dismiss:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(0, 209, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.dismiss-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+/* -------------------------------------------------------------------
+   Shared Chapter Layouts
+   ------------------------------------------------------------------- */
+.project-chapter {
+  margin-bottom: 7rem;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .project-chapter {
+    margin-bottom: 10rem;
+  }
+}
+
+.chapter-marker {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.chapter-num {
+  font-family: monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #00D1FF;
+  letter-spacing: 0.08em;
+}
+
+.chapter-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8b9bb4;
+}
+
+.section-lead-para {
+  font-size: 1.08rem;
+  line-height: 1.7;
+  color: #c4d0e5;
+  margin-bottom: 2.5rem;
+  max-width: 680px;
+}
+
+/* -------------------------------------------------------------------
+   Project Intro Chapter
+   ------------------------------------------------------------------- */
+.intro-chapter {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 6rem;
+  padding-top: 2rem;
+}
+
+.project-intro-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.project-brand-mark {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(1.1);
+}
+
+.project-meta-pill {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #00D1FF;
+  background: rgba(0, 209, 255, 0.08);
+  border: 1px solid rgba(0, 209, 255, 0.22);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.project-headline-hero {
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin: 0 0 1.5rem;
+  color: #ffffff;
+}
+
+.project-statement-lead {
+  font-size: clamp(1.2rem, 2.5vw, 1.85rem);
+  font-weight: 300;
+  line-height: 1.45;
+  color: #a3b3cc;
+  max-width: 720px;
+  margin: 0 0 3.5rem;
+}
+
+.project-scroll-cue {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #5d6e87;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.scroll-cue-line {
+  width: 42px;
+  height: 1px;
+  background: #00D1FF;
+  opacity: 0.5;
+}
+
+/* -------------------------------------------------------------------
+   Chapter 01 — The Question
+   ------------------------------------------------------------------- */
+.statement-quote {
+  font-size: clamp(1.6rem, 3.8vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0 0 2.5rem;
+  max-width: 860px;
+}
+
+.statement-context-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 780px;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #9cb0ce;
+}
+
+@media (min-width: 768px) {
+  .statement-context-body {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+}
+
+/* -------------------------------------------------------------------
+   Chapter 02 — Assumptions
+   ------------------------------------------------------------------- */
+.assumptions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 3.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  max-width: 680px;
+}
+
+@media (min-width: 600px) {
+  .assumptions-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.assumptions-list li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #b1c1dc;
+}
+
+.assumptions-list li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: #00D1FF;
+  opacity: 0.7;
+}
+
+.narrative-pivot-statement {
+  margin-top: 3.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.pivot-line {
+  width: 32px;
+  height: 2px;
+  background: #14FF00;
+}
+
+.pivot-text {
+  font-size: clamp(1.3rem, 2.5vw, 1.85rem);
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* -------------------------------------------------------------------
+   Artifact Frames (Visual work presentation)
+   ------------------------------------------------------------------- */
+.artifact-frame {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(13, 17, 34, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 0.75rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+}
+
+.project-artifact-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.artifact-caption {
+  display: block;
+  margin-top: 0.85rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #7b8fae;
+  letter-spacing: 0.02em;
+}
+
+/* -------------------------------------------------------------------
+   Chapter 03 — Research Metrics & Findings
+   ------------------------------------------------------------------- */
+.metrics-triad {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  background: rgba(13, 18, 38, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+@media (min-width: 640px) {
+  .metrics-triad {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+.metric-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metric-number {
+  font-size: clamp(2.8rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1;
+  color: #00D1FF;
+  letter-spacing: -0.03em;
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #8fa2c0;
+  font-weight: 500;
+}
+
+.research-findings-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 780px;
+}
+
+.finding-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  background: rgba(12, 16, 32, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.finding-bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #14FF00;
+  flex-shrink: 0;
+  margin-top: 0.45rem;
+}
+
+.finding-text {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: #d1dced;
+}
+
+/* -------------------------------------------------------------------
+   Chapter 04 — People (Personas & Journey Maps)
+   ------------------------------------------------------------------- */
+.personas-deep-dive {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+}
+
+.persona-spatial-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.persona-badge {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #00D1FF;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.persona-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.5rem;
+}
+
+.persona-subtitle {
+  font-size: 0.95rem;
+  color: #8b9fb9;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.artifact-pair {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 860px) {
+  .artifact-pair {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* -------------------------------------------------------------------
+   Chapter 05 — The Shift
+   ------------------------------------------------------------------- */
+.shift-triad-composition {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: stretch;
+  max-width: 800px;
+}
+
+.shift-stage-block {
+  padding: 2.25rem;
+  border-radius: 14px;
+  background: rgba(12, 16, 33, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.shift-stage-block.active-contrast {
+  border-color: rgba(0, 209, 255, 0.25);
+  background: rgba(12, 22, 45, 0.7);
+}
+
+.shift-stage-block.highlight-design {
+  border-color: rgba(20, 255, 0, 0.3);
+  background: rgba(12, 28, 38, 0.75);
+}
+
+.shift-tag {
+  font-family: monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: #7b8ea8;
+  display: block;
+  margin-bottom: 0.65rem;
+}
+
+.shift-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  margin: 0 0 0.75rem;
+}
+
+.highlight-design .shift-heading {
+  color: #14FF00;
+}
+
+.shift-desc {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #b7c8e2;
+  margin: 0;
+}
+
+.shift-arrow-indicator {
+  text-align: center;
+  font-size: 1.4rem;
+  color: #00D1FF;
+  opacity: 0.6;
+}
+
+/* -------------------------------------------------------------------
+   Chapter 06 — Four Experience Pillars
+   ------------------------------------------------------------------- */
+.pillars-spatial-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4.5rem;
+}
+
+.pillar-stage-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: center;
+  padding: 2.5rem 1.75rem;
+  border-radius: 18px;
+  background: rgba(13, 17, 36, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (min-width: 860px) {
+  .pillar-stage-card {
+    grid-template-columns: 1fr 1.35fr;
+    padding: 3rem 2.5rem;
+    gap: 3rem;
+  }
+}
+
+.pillar-index {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #00D1FF;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.pillar-title {
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 1rem;
+  letter-spacing: -0.01em;
+}
+
+.pillar-summary {
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: #a6bad6;
+  margin: 0;
+}
+
+.pillar-visual-pane {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+}
+
+.pillar-visual-pane.dual-screens .screen-frame {
+  max-width: 220px;
+}
+
+.pillar-visual-pane.single-screen .screen-frame {
+  max-width: 320px;
+}
+
+.screen-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pillar-screen-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.55);
+}
+
+.screen-tag {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: #8295b0;
+  letter-spacing: 0.02em;
+}
+
+/* -------------------------------------------------------------------
+   Chapter 07 — Iteration & Progression
+   ------------------------------------------------------------------- */
+.iteration-progression-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 3rem;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  background: rgba(12, 16, 32, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.prog-step {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #798ea8;
+}
+
+.prog-step.active {
+  color: #14FF00;
+}
+
+.prog-arrow {
+  color: #00D1FF;
+  opacity: 0.4;
+  font-size: 0.85rem;
+}
+
+.iteration-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* -------------------------------------------------------------------
+   Chapter 08 — Testing
+   ------------------------------------------------------------------- */
+.testing-method-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 3.5rem;
+}
+
+.method-pill {
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  background: rgba(0, 209, 255, 0.07);
+  border: 1px solid rgba(0, 209, 255, 0.25);
+  color: #d8e5f8;
+}
+
+.philosophy-text {
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 500;
+  line-height: 1.35;
+  color: #ffffff;
+  margin: 0 0 1.25rem;
+}
+
+.philosophy-desc {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #9eb1cd;
+  max-width: 740px;
+  margin: 0;
+}
+
+/* -------------------------------------------------------------------
+   Chapter 09 — What Changed
+   ------------------------------------------------------------------- */
+.changes-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 680px) {
+  .changes-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+.change-card {
+  padding: 2rem;
+  border-radius: 14px;
+  background: rgba(12, 16, 34, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.change-num {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #00D1FF;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.65rem;
+}
+
+.change-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.75rem;
+}
+
+.change-detail {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #a4b7d3;
+  margin: 0;
+}
+
+/* -------------------------------------------------------------------
+   Chapter 10 — Not Everything Survived (XP System)
+   ------------------------------------------------------------------- */
+.survived-flow-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.status-step {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #7d93b0;
+}
+
+.status-step.removed {
+  color: #ff5e7e;
+  background: rgba(255, 94, 126, 0.1);
+  border: 1px solid rgba(255, 94, 126, 0.35);
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+}
+
+.status-arrow {
+  color: #7d93b0;
+  opacity: 0.4;
+}
+
+.survived-case-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (min-width: 860px) {
+  .survived-case-body {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.survived-explanation {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: #a6bbd8;
+}
+
+.case-title {
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.case-verdict {
+  color: #d1dfed;
+  font-style: italic;
+  border-left: 2px solid #00D1FF;
+  padding-left: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* -------------------------------------------------------------------
+   Chapter 11 — The Final Experience (Cinematic Climax)
+   ------------------------------------------------------------------- */
+.cinematic-screen-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  margin-top: 3.5rem;
+}
+
+.cinematic-stage-item {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: center;
+  padding: 2rem;
+  border-radius: 20px;
+  background: rgba(12, 17, 36, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (min-width: 768px) {
+  .cinematic-stage-item {
+    grid-template-columns: 1fr 1.1fr;
+    padding: 3rem 2.5rem;
+    gap: 3.5rem;
+  }
+}
+
+.cinematic-stage-item:nth-child(even) {
+  background: rgba(10, 15, 32, 0.5);
+}
+
+@media (min-width: 768px) {
+  .cinematic-stage-item:nth-child(even) .cinematic-meta {
+    order: 2;
+  }
+  .cinematic-stage-item:nth-child(even) .cinematic-device {
+    order: 1;
+  }
+}
+
+.cinematic-index {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #00D1FF;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.65rem;
+}
+
+.cinematic-name {
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 1rem;
+}
+
+.cinematic-desc {
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: #a4bad7;
+  margin: 0;
+}
+
+.cinematic-device {
+  display: flex;
+  justify-content: center;
+}
+
+.final-screen-img {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  display: block;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.65);
+  transition: transform 0.35s ease;
+}
+
+.final-screen-img:hover {
+  transform: translateY(-4px);
+}
+
+/* -------------------------------------------------------------------
+   Chapter 12 — Results
+   ------------------------------------------------------------------- */
+.results-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .results-metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+.result-metric-card {
+  padding: 2.25rem 1.75rem;
+  border-radius: 14px;
+  background: rgba(12, 16, 34, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.result-stat {
+  font-size: clamp(3rem, 5vw, 4.2rem);
+  font-weight: 700;
+  color: #14FF00;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.result-desc {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #a8b8cf;
+  margin: 0;
+}
+
+/* -------------------------------------------------------------------
+   Chapter 13 — Recognition
+   ------------------------------------------------------------------- */
+.recognition-content-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  max-width: 780px;
+}
+
+.recognition-award-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 1.75rem 2rem;
+  border-radius: 12px;
+  background: rgba(12, 17, 36, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.recognition-accent {
+  width: 3px;
+  height: 28px;
+  background: #00D1FF;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 0.35rem;
+}
+
+.recognition-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  margin: 0 0 0.35rem;
+}
+
+.recognition-sub {
+  font-size: 0.92rem;
+  color: #8b9fb8;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* -------------------------------------------------------------------
+   Project Exit Chapter
+   ------------------------------------------------------------------- */
+.project-exit-chapter {
+  margin-bottom: 2rem;
+  padding-top: 4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.exit-spatial-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.exit-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #00D1FF;
+  font-weight: 600;
+}
+
+.exit-prompt-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.exit-prompt-desc {
+  font-size: 1.05rem;
+  color: #92a4bf;
+  margin: 0 0 1.5rem;
+  max-width: 520px;
+  line-height: 1.6;
+}
+
+.exit-spatial-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 2rem;
+  border-radius: 999px;
+  background: rgba(0, 209, 255, 0.12);
+  border: 1px solid rgba(0, 209, 255, 0.35);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.exit-spatial-btn:hover {
+  background: rgba(0, 209, 255, 0.22);
+  border-color: #00D1FF;
+  transform: translateX(4px);
+}
+
+.exit-arrow {
+  font-size: 1.1rem;
+  color: #00D1FF;
+  transition: transform 0.25s ease;
+}
+
+.exit-spatial-btn:hover .exit-arrow {
+  transform: translateX(3px);
+}

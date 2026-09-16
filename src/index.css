@@ -57,3 +57,10 @@ body {
   position: relative;
   min-height: 100vh;
 }
+
+/* Reduced particle intensity while inside full project presentation */
+.spatial-experience.project-active .intro-canvas {
+  opacity: 0.22 !important;
+  transition: opacity 0.8s ease;
+}
+

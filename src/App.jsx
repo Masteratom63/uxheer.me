@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ParticleIntro from './components/ParticleIntro/ParticleIntro';
 import Statement from './components/Statement/Statement';
 import SpatialGallery from './components/SpatialGallery/SpatialGallery';
+import Project01Scene from './components/Project01Scene/Project01Scene';
 import About from './components/About/About';
 import Capabilities from './components/Capabilities/Capabilities';
 import Contact from './components/Contact/Contact';
@@ -14,12 +15,14 @@ import { updateSpatial } from './utils/spatialController';
  *  1. INTRO: Particle Arrival -> Logo -> HEER PATEL -> Dispersal
  *  2. STATEMENT: Immediate 100vh viewport state at scroll=0, fluid editorial typography
  *  3. SELECTED WORK: Sequential 3D camera travel (Project 01 -> 02 -> 03)
+ *     - PROJECT 01: SCOTIABANK SCENE+ (Immersive full project experience)
  *  4. ABOUT / APPROACH: "I work across design, technology and visual communication."
  *  5. CAPABILITIES: Multi-depth spatial typography composition
  *  6. CONTACT: "Have something worth building? Let's talk." & calm final end state
  */
 export default function App() {
   const [stage, setStage] = useState('intro'); // 'intro' | 'experience'
+  const [activeProject, setActiveProject] = useState(null); // null | 'scotiabank-scene'
   const currentRatioRef = useRef(0);
   const rafIdRef = useRef(null);
 
@@ -28,17 +31,19 @@ export default function App() {
     setStage('experience');
   }, []);
 
-  // Lock scroll during intro; unlock once statement is reached
+  // Lock scroll during intro or while inside full project presentation
   useEffect(() => {
-    if (stage === 'intro') {
+    if (stage === 'intro' || activeProject) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
-      window.scrollTo(0, 0);
+      if (stage === 'intro') {
+        window.scrollTo(0, 0);
+      }
     } else {
       document.body.style.overflowY = 'auto';
       document.documentElement.style.overflowY = 'auto';
     }
-  }, [stage]);
+  }, [stage, activeProject]);
 
   // High-performance continuous scroll & camera lerp engine
   // Zero React state updates during scrolling - directly broadcasts via spatialController
@@ -74,10 +79,26 @@ export default function App() {
     };
   }, [stage]);
 
+  // Enter Project 01
+  const handleEnterProject01 = useCallback(() => {
+    setActiveProject('scotiabank-scene');
+  }, []);
+
+  // Exit Project 01 and smoothly return to portfolio space, positioned ahead toward Project 02
+  const handleExitProject01 = useCallback(() => {
+    setActiveProject(null);
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    // Project 01 focus is 0.16; Project 02 is 0.31; position smoothly at ~0.24
+    const targetScroll = maxScroll * 0.24;
+    window.scrollTo({ top: targetScroll, behavior: 'instant' });
+    currentRatioRef.current = 0.24;
+    updateSpatial(0.24);
+  }, []);
+
   const isIntroFinished = stage === 'experience';
 
   return (
-    <main className="spatial-experience">
+    <main className={`spatial-experience ${activeProject ? 'project-active' : ''}`}>
       {/* ONE Persistent 3D Spatial Particle Field throughout the Homepage */}
       <ParticleIntro
         onComplete={handleIntroComplete}
@@ -88,7 +109,16 @@ export default function App() {
       <Statement isVisible={isIntroFinished} />
 
       {/* 2. SELECTED WORK: Sequential 3D Spatial Gallery (Project 01 -> 02 -> 03) */}
-      <SpatialGallery isIntroFinished={isIntroFinished} />
+      <SpatialGallery
+        isIntroFinished={isIntroFinished}
+        onEnterProject01={handleEnterProject01}
+      />
+
+      {/* PROJECT 01 IMMERSIVE PRESENTATION: Scotiabank Scene+ */}
+      <Project01Scene
+        isActive={activeProject === 'scotiabank-scene'}
+        onExit={handleExitProject01}
+      />
 
       {/* 3. ABOUT / APPROACH */}
       <About isIntroFinished={isIntroFinished} />
