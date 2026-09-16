@@ -123,7 +123,7 @@ export default function App() {
   const isIntroFinished = stage === 'experience';
 
   return (
-    <main className={`spatial-experience ${isProjectActive ? 'project-active' : ''}`}>
+    <main className={`spatial-experience ${isProjectActive ? 'project-active' : ''} project-${projectState.toLowerCase()}`}>
       {/* ONE Persistent 3D Spatial Particle Field throughout the Homepage */}
       <ParticleIntro
         onComplete={handleIntroComplete}

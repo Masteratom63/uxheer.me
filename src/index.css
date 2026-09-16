@@ -59,10 +59,18 @@ body {
 }
 
 /* Particle environment inside full project presentation */
-.spatial-experience.project-active .intro-canvas {
+.spatial-experience.project-opening .intro-canvas,
+.spatial-experience.project-open .intro-canvas {
   opacity: 0 !important;
   pointer-events: none !important;
   transition: opacity 0.6s ease;
+}
+
+/* Symmetrical smooth fade-in of home cosmos during project exit wave */
+.spatial-experience.project-closing .intro-canvas {
+  opacity: 0.85 !important;
+  pointer-events: none !important;
+  transition: opacity 1.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .spatial-experience.project-active .intro-canvas-fg {

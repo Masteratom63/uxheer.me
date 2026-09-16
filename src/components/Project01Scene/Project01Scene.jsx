@@ -47,10 +47,15 @@ export default function Project01Scene({
     }
   };
 
+  const lastScrollTopRef = useRef(0);
+  const maxReachedProgressRef = useRef(0);
+
   // Scroll to top on new open lifecycle
   useEffect(() => {
     if (lifecycleState === 'OPENING') {
       setScrollProgress(0);
+      lastScrollTopRef.current = 0;
+      maxReachedProgressRef.current = 0;
       if (containerRef.current) {
         containerRef.current.scrollTop = 0;
       }
@@ -75,9 +80,21 @@ export default function Project01Scene({
   const handleScroll = () => {
     const el = containerRef.current;
     if (!el) return;
+    const currentScrollTop = el.scrollTop;
     const maxScroll = Math.max(1, el.scrollHeight - el.clientHeight);
-    const fraction = Math.min(1, Math.max(0, el.scrollTop / maxScroll));
-    setScrollProgress(fraction);
+    const rawFraction = Math.min(1, Math.max(0, currentScrollTop / maxScroll));
+
+    // When scrolling down, never allow fraction to drop due to layout shifts or dynamic elements
+    if (currentScrollTop >= lastScrollTopRef.current) {
+      const progressiveFraction = Math.max(rawFraction, maxReachedProgressRef.current);
+      maxReachedProgressRef.current = progressiveFraction;
+      setScrollProgress(progressiveFraction);
+    } else {
+      // User is scrolling upwards: allow clean backward camera travel
+      maxReachedProgressRef.current = rawFraction;
+      setScrollProgress(rawFraction);
+    }
+    lastScrollTopRef.current = currentScrollTop;
   };
 
   if (lifecycleState === 'CLOSED') return null;
