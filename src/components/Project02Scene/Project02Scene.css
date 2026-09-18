@@ -1,0 +1,710 @@
+/* ===================================================================
+   Project02Scene — VISUAL COMMUNICATION
+   Visual System: #050711 base, #00D1FF cyan accent, #14FF00 green accent
+   Image-led, editorial typography, spatial continuity, generous negative space
+   =================================================================== */
+
+.project02-scene-root {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  overflow: hidden;
+  background-color: #050711;
+  pointer-events: none;
+}
+
+/* 1. Dedicated Local Particle Canvas (Fixed behind content) */
+.project-local-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 2. Subtle Ambient Vignette & Spatial Atmosphere */
+.project02-ambient-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  background: 
+    radial-gradient(circle at 50% 15%, rgba(13, 22, 48, 0.45) 0%, rgba(5, 7, 17, 0) 65%),
+    radial-gradient(circle at 80% 60%, rgba(0, 209, 255, 0.03) 0%, rgba(5, 7, 17, 0) 50%),
+    radial-gradient(circle at 20% 85%, rgba(20, 255, 0, 0.02) 0%, rgba(5, 7, 17, 0) 50%);
+  z-index: 0;
+}
+
+/* 3. Viewport-Fixed Sticky Dismiss Button (Always accessible in top-right) */
+.project02-spatial-dismiss {
+  position: fixed;
+  top: max(1.5rem, env(safe-area-inset-top, 1.5rem));
+  right: max(1.5rem, env(safe-area-inset-right, 1.5rem));
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  background: rgba(14, 18, 36, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #a0aec0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+}
+
+.project02-spatial-dismiss:hover {
+  background: rgba(0, 209, 255, 0.18);
+  color: #ffffff;
+  border-color: rgba(0, 209, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.dismiss-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+  color: #00D1FF;
+}
+
+/* 4. Dedicated Content Scroll Viewport */
+.project02-scroll-viewport {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  pointer-events: auto;
+  z-index: 2;
+  color: #f1f3f9;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Lifecycle-driven Content Visibility */
+.project02-scene-root.state-opening .project02-scroll-viewport {
+  opacity: 0;
+  pointer-events: none;
+  animation: project02ContentSettle 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.85s forwards;
+}
+
+@keyframes project02ContentSettle {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.project02-scene-root.state-open .project02-scroll-viewport {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.project02-scene-root.state-closing .project02-scroll-viewport {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.project02-scene-root.state-closing .project02-spatial-dismiss {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* Main Content Container */
+.project02-editorial-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 6rem 1.5rem 12rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .project02-editorial-content {
+    padding: 8rem 3rem 14rem;
+  }
+}
+
+/* Chapters & Section Layout */
+.project02-chapter {
+  margin-bottom: 7rem;
+}
+
+@media (min-width: 768px) {
+  .project02-chapter {
+    margin-bottom: 10rem;
+  }
+}
+
+/* Chapter Marker */
+.chapter-marker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-family: monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #00D1FF;
+}
+
+.chapter-num {
+  color: #00D1FF;
+}
+
+.chapter-label {
+  color: #a4bad7;
+}
+
+/* Paragraphs */
+.section-lead-para {
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  line-height: 1.65;
+  color: #a4bad7;
+  max-width: 720px;
+  margin: 0 0 3.5rem;
+}
+
+/* ===================================================================
+   SECTION 01 — ENTRY
+   =================================================================== */
+.intro-chapter {
+  min-height: 68vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 5rem;
+}
+
+.project02-intro-meta {
+  margin-bottom: 1.5rem;
+}
+
+.project02-meta-pill {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: #00D1FF;
+  background: rgba(0, 209, 255, 0.08);
+  border: 1px solid rgba(0, 209, 255, 0.25);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.project02-headline-hero {
+  font-size: clamp(2.4rem, 6.5vw, 5.2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: #ffffff;
+  margin: 0 0 1.75rem;
+  text-transform: uppercase;
+}
+
+.project02-statement-lead {
+  font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+  line-height: 1.6;
+  color: #a4bad7;
+  max-width: 680px;
+  margin: 0 0 3.5rem;
+}
+
+.project02-scroll-cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  align-self: flex-start;
+  opacity: 0.65;
+}
+
+.minimal-scroll-text {
+  font-family: monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: #7d93b3;
+}
+
+.minimal-scroll-line {
+  width: 1px;
+  height: 38px;
+  background: linear-gradient(180deg, #00D1FF, rgba(0, 209, 255, 0));
+  animation: scrollPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% {
+    transform: scaleY(0.7);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* ===================================================================
+   SECTION 02 & 03 — CURRENT WORK (Visual Exhibit Blocks)
+   =================================================================== */
+.visual-exhibit-block {
+  margin-bottom: 7rem;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .visual-exhibit-block {
+    margin-bottom: 9rem;
+  }
+}
+
+.exhibit-header {
+  margin-bottom: 2rem;
+}
+
+.exhibit-tag {
+  display: block;
+  font-family: monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #14FF00;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.exhibit-title {
+  font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Museum-Grade Artwork Frame */
+.artwork-frame {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(12, 17, 36, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.artwork-frame:hover {
+  border-color: rgba(0, 209, 255, 0.35);
+  box-shadow: 0 30px 75px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 209, 255, 0.12);
+  transform: translateY(-4px);
+}
+
+.artwork-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  transition: transform 0.5s ease;
+}
+
+.artwork-caption {
+  display: block;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #8fa0b5;
+  margin-top: 1rem;
+}
+
+/* 1. Ahmedabad Diptych */
+.diptych-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+  .diptych-grid {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 3.5rem;
+  }
+}
+
+.dominant-stage .artwork-frame {
+  border-radius: 24px;
+}
+
+/* 2. Canada Magazine Hero */
+.magazine-hero-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  max-width: 780px;
+}
+
+.hero-frame {
+  border-radius: 24px;
+}
+
+.exhibit-editorial-note {
+  padding: 1.25rem 1.5rem;
+  border-left: 2px solid #00D1FF;
+  background: rgba(14, 20, 44, 0.45);
+  border-radius: 0 12px 12px 0;
+}
+
+.note-lead {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.35rem;
+}
+
+.note-body {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #8fa0b5;
+  margin: 0;
+}
+
+/* 3. Explorer Series */
+.explorer-composition {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.banner-frame {
+  border-radius: 24px;
+}
+
+.full-stage {
+  max-width: 680px;
+}
+
+/* 4. Identity Diptych */
+.identity-diptych-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .identity-diptych-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.square-frame {
+  aspect-ratio: 1 / 1;
+}
+
+.square-frame .artwork-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===================================================================
+   SECTION 04 — EXPLORATION & PROCESS
+   =================================================================== */
+.editorial-statement-block {
+  margin-bottom: 3.5rem;
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  background: rgba(12, 17, 36, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.statement-quote {
+  font-size: clamp(1.4rem, 2.8vw, 2rem);
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+}
+
+.statement-context-body p {
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: #a4bad7;
+  margin: 0;
+}
+
+.exploration-comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .exploration-comparison-grid {
+    grid-template-columns: 1fr 1.15fr;
+    gap: 3.5rem;
+    align-items: flex-start;
+  }
+}
+
+.exploration-badge {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #8fa0b5;
+  margin-bottom: 0.85rem;
+  text-transform: uppercase;
+}
+
+.highlight-badge {
+  color: #00D1FF;
+}
+
+/* ===================================================================
+   SECTION 05 — SELECTED EARLIER WORK
+   =================================================================== */
+.earlier-work-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.earlier-work-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .earlier-work-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+    align-items: flex-start;
+  }
+}
+
+.earlier-meta {
+  display: block;
+  font-family: monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #7d93b3;
+  margin-bottom: 0.85rem;
+  text-transform: uppercase;
+}
+
+.dual-card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.compact-frame {
+  border-radius: 16px;
+}
+
+/* ===================================================================
+   SECTION 06 — ACROSS FORMATS
+   =================================================================== */
+.formats-manifesto-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.85rem 2.25rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(14, 20, 44, 0.7) 0%, rgba(8, 12, 28, 0.85) 100%);
+  border: 1px solid rgba(0, 209, 255, 0.2);
+  margin-bottom: 1.5rem;
+}
+
+.format-item {
+  font-family: monospace;
+  font-size: clamp(0.85rem, 1.8vw, 1.15rem);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.format-item.highlight {
+  color: #00D1FF;
+}
+
+.format-dot {
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 700;
+}
+
+.formats-subtext {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #8fa0b5;
+  max-width: 620px;
+  margin: 0;
+}
+
+/* ===================================================================
+   SECTION 07 — EXIT
+   =================================================================== */
+.project02-exit-chapter {
+  margin-top: 8rem;
+  margin-bottom: 2rem;
+  padding-top: 4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.exit-spatial-wrapper {
+  max-width: 580px;
+}
+
+.exit-eyebrow {
+  display: block;
+  font-family: monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: #00D1FF;
+  margin-bottom: 0.85rem;
+  text-transform: uppercase;
+}
+
+.exit-prompt-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0 0 1rem;
+}
+
+.exit-prompt-desc {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #a4bad7;
+  margin: 0 0 2.25rem;
+}
+
+.exit-nav-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.exit-spatial-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.95rem 1.85rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(0, 209, 255, 0.15) 0%, rgba(0, 209, 255, 0.05) 100%);
+  border: 1px solid rgba(0, 209, 255, 0.45);
+  color: #00D1FF;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 24px rgba(0, 209, 255, 0.15);
+}
+
+.exit-spatial-btn:hover {
+  background: #00D1FF;
+  border-color: #00D1FF;
+  color: #050711;
+  box-shadow: 0 0 35px rgba(0, 209, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.exit-spatial-btn.exit-prev-btn {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #f1f3f9;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.exit-spatial-btn.exit-prev-btn:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #050711;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.exit-arrow,
+.exit-arrow-prev {
+  font-size: 1.1rem;
+  transition: transform 0.25s ease;
+}
+
+.exit-spatial-btn:hover .exit-arrow {
+  transform: translateX(4px);
+}
+
+.exit-spatial-btn:hover .exit-arrow-prev {
+  transform: translateX(-4px);
+}
+
+.exit-spatial-sublink {
+  display: block;
+  margin: 0 auto;
+  background: transparent;
+  border: none;
+  color: #718096;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s ease;
+}
+
+.exit-spatial-sublink:hover {
+  color: #cbd5e0;
+}
+
+@media (max-width: 640px) {
+  .exit-nav-group {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 1.75rem;
+  }
+
+  .exit-spatial-btn {
+    justify-content: center;
+    width: 100%;
+  }
+}

@@ -3,6 +3,7 @@ import ParticleIntro from './components/ParticleIntro/ParticleIntro';
 import Statement from './components/Statement/Statement';
 import SpatialGallery from './components/SpatialGallery/SpatialGallery';
 import Project01Scene from './components/Project01Scene/Project01Scene';
+import Project02Scene from './components/Project02Scene/Project02Scene';
 import About from './components/About/About';
 import Capabilities from './components/Capabilities/Capabilities';
 import Contact from './components/Contact/Contact';
@@ -16,6 +17,7 @@ import { updateSpatial } from './utils/spatialController';
  *  2. STATEMENT: Immediate 100vh viewport state at scroll=0, fluid editorial typography
  *  3. SELECTED WORK: Sequential 3D camera travel (Project 01 -> 02 -> 03)
  *     - PROJECT 01: SCOTIABANK SCENE+ (Immersive full project experience)
+ *     - PROJECT 02: VISUAL COMMUNICATION (Curated editorial visual body of work)
  *  4. ABOUT / APPROACH: "I work across design, technology and visual communication."
  *  5. CAPABILITIES: Multi-depth spatial typography composition
  *  6. CONTACT: "Have something worth building? Let's talk." & calm final end state
@@ -24,6 +26,8 @@ export default function App() {
   const [stage, setStage] = useState('intro'); // 'intro' | 'experience'
   // Explicit Project 01 Lifecycle: 'CLOSED' | 'OPENING' | 'OPEN' | 'CLOSING'
   const [projectState, setProjectState] = useState('CLOSED');
+  // Explicit Project 02 Lifecycle: 'CLOSED' | 'OPENING' | 'OPEN' | 'CLOSING'
+  const [project02State, setProject02State] = useState('CLOSED');
   // Transition curtain state: 'idle' | 'fade-to-black' | 'fade-in-content'
   const [exitTransitionStage, setExitTransitionStage] = useState('idle');
   const currentRatioRef = useRef(0);
@@ -31,8 +35,8 @@ export default function App() {
   const transitionTimerRef = useRef(null);
   const fadeTimerRef = useRef(null);
 
-  const isProjectActive = projectState !== 'CLOSED';
-  const isScrollLocked = stage === 'intro' || projectState !== 'CLOSED' || exitTransitionStage !== 'idle';
+  const isProjectActive = projectState !== 'CLOSED' || project02State !== 'CLOSED';
+  const isScrollLocked = stage === 'intro' || isProjectActive || exitTransitionStage !== 'idle';
 
   // Cleanup transition timers on unmount
   useEffect(() => {
@@ -62,9 +66,9 @@ export default function App() {
   }, [stage, isScrollLocked]);
 
   // High-performance continuous scroll & camera lerp engine
-  // Pauses while Project 01 is active so homepage scroll never conflicts with Project 01
+  // Pauses while any project is active so homepage scroll never conflicts with project scene
   useEffect(() => {
-    if (stage === 'intro' || projectState !== 'CLOSED') return;
+    if (stage === 'intro' || isProjectActive) return;
 
     let isRunning = true;
 
@@ -93,17 +97,18 @@ export default function App() {
       isRunning = false;
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     };
-  }, [stage, projectState]);
+  }, [stage, isProjectActive]);
 
-  // Explicit State Machine: Enter Project 01 (CLOSED -> OPENING)
+  // ===================================================================
+  // Project 01 Handlers (Scotiabank Scene+)
+  // ===================================================================
   const handleEnterProject01 = useCallback(() => {
     setProjectState((prev) => {
-      if (prev !== 'CLOSED') return prev; // Prevent duplicate triggers
+      if (prev !== 'CLOSED') return prev;
       return 'OPENING';
     });
   }, []);
 
-  // Explicit State Machine: Open Wave Complete (OPENING -> OPEN)
   const handleOpenComplete = useCallback(() => {
     setProjectState((prev) => {
       if (prev !== 'OPENING') return prev;
@@ -111,18 +116,14 @@ export default function App() {
     });
   }, []);
 
-  // Explicit State Machine: Trigger Exit Wave (OPEN -> CLOSING)
-  // Fade animation begins when the ripple animation begins!
   const handleTriggerExit = useCallback(() => {
     setProjectState((prev) => {
-      if (prev !== 'OPEN') return prev; // Ignore if already closing
+      if (prev !== 'OPEN') return prev;
       return 'CLOSING';
     });
 
-    // 1. Fade animation begins immediately when the ripple begins
     setExitTransitionStage('fade-to-black');
 
-    // 2. Once solid black and ripple has expanded (650ms), load homepage stuff behind curtain
     transitionTimerRef.current = setTimeout(() => {
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const targetScroll = maxScroll * 0.16;
@@ -131,12 +132,8 @@ export default function App() {
       updateSpatial(0.16);
       setProjectState('CLOSED');
 
-      // 3. Allow 120ms while screen is 100% black for homepage elements & canvases to mount, paint, and stabilize
       fadeTimerRef.current = setTimeout(() => {
-        // Broadcast spatial updates to ensure all settled cards are at peak focal accuracy
         updateSpatial(0.16);
-
-        // 4. Fade animation ends AFTER the stuff has been loaded on the home page
         setExitTransitionStage('fade-in-content');
 
         setTimeout(() => {
@@ -146,16 +143,154 @@ export default function App() {
     }, 650);
   }, []);
 
-  // Exit Wave Complete fallback handler
+  // Seamless transition directly from Project 01 to Project 02
+  const handleContinueFromProject01To02 = useCallback(() => {
+    setProjectState((prev) => {
+      if (prev !== 'OPEN') return prev;
+      return 'CLOSING';
+    });
+
+    setExitTransitionStage('fade-to-black');
+
+    transitionTimerRef.current = setTimeout(() => {
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const targetScroll = maxScroll * 0.34;
+      window.scrollTo({ top: targetScroll, behavior: 'instant' });
+      currentRatioRef.current = 0.34;
+      updateSpatial(0.34);
+      setProjectState('CLOSED');
+      setProject02State('OPENING');
+
+      fadeTimerRef.current = setTimeout(() => {
+        updateSpatial(0.34);
+        setExitTransitionStage('fade-in-content');
+
+        setTimeout(() => {
+          setExitTransitionStage('idle');
+        }, 650);
+      }, 120);
+    }, 650);
+  }, []);
+
   const handleExitComplete = useCallback(() => {
-    // Synchronously coordinated inside handleTriggerExit
+    // Coordinated inside handleTriggerExit
+  }, []);
+
+  // ===================================================================
+  // Project 02 Handlers (Visual Communication)
+  // ===================================================================
+  const handleEnterProject02 = useCallback(() => {
+    setProject02State((prev) => {
+      if (prev !== 'CLOSED') return prev;
+      return 'OPENING';
+    });
+  }, []);
+
+  const handleOpenProject02Complete = useCallback(() => {
+    setProject02State((prev) => {
+      if (prev !== 'OPENING') return prev;
+      return 'OPEN';
+    });
+  }, []);
+
+  const handleTriggerExitProject02 = useCallback(() => {
+    setProject02State((prev) => {
+      if (prev !== 'OPEN') return prev;
+      return 'CLOSING';
+    });
+
+    setExitTransitionStage('fade-to-black');
+
+    transitionTimerRef.current = setTimeout(() => {
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const targetScroll = maxScroll * 0.34;
+      window.scrollTo({ top: targetScroll, behavior: 'instant' });
+      currentRatioRef.current = 0.34;
+      updateSpatial(0.34);
+      setProject02State('CLOSED');
+
+      fadeTimerRef.current = setTimeout(() => {
+        updateSpatial(0.34);
+        setExitTransitionStage('fade-in-content');
+
+        setTimeout(() => {
+          setExitTransitionStage('idle');
+        }, 650);
+      }, 120);
+    }, 650);
+  }, []);
+
+  // Seamless transition directly from Project 02 back to Project 01
+  const handleBackFromProject02To01 = useCallback(() => {
+    setProject02State((prev) => {
+      if (prev !== 'OPEN') return prev;
+      return 'CLOSING';
+    });
+
+    setExitTransitionStage('fade-to-black');
+
+    transitionTimerRef.current = setTimeout(() => {
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const targetScroll = maxScroll * 0.16;
+      window.scrollTo({ top: targetScroll, behavior: 'instant' });
+      currentRatioRef.current = 0.16;
+      updateSpatial(0.16);
+      setProject02State('CLOSED');
+      setProjectState('OPENING');
+
+      fadeTimerRef.current = setTimeout(() => {
+        updateSpatial(0.16);
+        setExitTransitionStage('fade-in-content');
+
+        setTimeout(() => {
+          setExitTransitionStage('idle');
+        }, 650);
+      }, 120);
+    }, 650);
+  }, []);
+
+  // Seamless transition directly from Project 02 toward Project 03
+  const handleContinueFromProject02To03 = useCallback(() => {
+    setProject02State((prev) => {
+      if (prev !== 'OPEN') return prev;
+      return 'CLOSING';
+    });
+
+    setExitTransitionStage('fade-to-black');
+
+    transitionTimerRef.current = setTimeout(() => {
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const targetScroll = maxScroll * 0.48;
+      window.scrollTo({ top: targetScroll, behavior: 'instant' });
+      currentRatioRef.current = 0.48;
+      updateSpatial(0.48);
+      setProject02State('CLOSED');
+
+      fadeTimerRef.current = setTimeout(() => {
+        updateSpatial(0.48);
+        setExitTransitionStage('fade-in-content');
+
+        setTimeout(() => {
+          setExitTransitionStage('idle');
+        }, 650);
+      }, 120);
+    }, 650);
+  }, []);
+
+  const handleExitProject02Complete = useCallback(() => {
+    // Coordinated inside handleTriggerExitProject02
   }, []);
 
   const isIntroFinished = stage === 'experience';
+  const activeLifecycleClass = projectState !== 'CLOSED' 
+    ? `project-${projectState.toLowerCase()}`
+    : project02State !== 'CLOSED'
+    ? `project-${project02State.toLowerCase()}`
+    : '';
 
   return (
-    <main className={`spatial-experience ${isProjectActive ? 'project-active' : ''} project-${projectState.toLowerCase()}`}>
-      {/* Seamless Black Transition Curtain for Project 01 Exit */}
+    <main className={`spatial-experience ${isProjectActive ? 'project-active' : ''} ${activeLifecycleClass}`}>
+      {/* Seamless Black Transition Curtain for Project Exit */}
       <div
         className={`spatial-black-curtain stage-${exitTransitionStage}`}
         aria-hidden="true"
@@ -174,7 +309,8 @@ export default function App() {
       <SpatialGallery
         isIntroFinished={isIntroFinished}
         onEnterProject01={handleEnterProject01}
-        projectState={projectState}
+        onEnterProject02={handleEnterProject02}
+        projectState={projectState !== 'CLOSED' ? projectState : project02State}
       />
 
       {/* PROJECT 01 IMMERSIVE PRESENTATION: Scotiabank Scene+ with Isolated Lifecycle */}
@@ -183,6 +319,17 @@ export default function App() {
         onOpenComplete={handleOpenComplete}
         onExitTrigger={handleTriggerExit}
         onExitComplete={handleExitComplete}
+        onContinueToProject02={handleContinueFromProject01To02}
+      />
+
+      {/* PROJECT 02 IMMERSIVE PRESENTATION: Visual Communication */}
+      <Project02Scene
+        lifecycleState={project02State}
+        onOpenComplete={handleOpenProject02Complete}
+        onExitTrigger={handleTriggerExitProject02}
+        onExitComplete={handleExitProject02Complete}
+        onBackToProject01={handleBackFromProject02To01}
+        onGoToProject03={handleContinueFromProject02To03}
       />
 
       {/* 3. ABOUT / APPROACH */}

@@ -11,7 +11,7 @@ import './SpatialGallery.css';
  *  - Scroll 0.42 – 0.68: PROJECT 02 focal stage (centered at 0.54)
  *  - Scroll 0.72 – 1.00: PROJECT 03 focal stage (centered at 0.84)
  */
-export default function SpatialGallery({ isIntroFinished, onEnterProject01, projectState = 'CLOSED' }) {
+export default function SpatialGallery({ isIntroFinished, onEnterProject01, onEnterProject02, projectState = 'CLOSED' }) {
   if (!isIntroFinished) {
     return null;
   }
@@ -30,13 +30,14 @@ export default function SpatialGallery({ isIntroFinished, onEnterProject01, proj
       exploreText: 'ENTER PROJECT',
     },
     {
+      id: 'visual-communication',
       number: 'PROJECT 02',
-      title: 'Cognitive Workflow Protocol',
-      category: 'AI Architecture',
+      title: 'VISUAL COMMUNICATION',
+      category: 'GRAPHIC / VISUAL / SOCIAL / IDENTITY',
       focusPoint: 0.34,
       initialTilt: { rx: 1.0, ry: -2.0 },
-      artworkType: 'matrix',
-      exploreText: 'VIEW PROJECT ARCHIVE',
+      artworkType: 'visual',
+      exploreText: 'ENTER PROJECT',
     },
     {
       number: 'PROJECT 03',
@@ -67,7 +68,13 @@ export default function SpatialGallery({ isIntroFinished, onEnterProject01, proj
             initialTilt={item.initialTilt}
             artworkType={item.artworkType}
             exploreText={item.exploreText}
-            onEnter={item.id === 'scotiabank-scene' ? onEnterProject01 : undefined}
+            onEnter={
+              item.id === 'scotiabank-scene'
+                ? onEnterProject01
+                : item.id === 'visual-communication'
+                ? onEnterProject02
+                : undefined
+            }
           />
         ))}
       </div>

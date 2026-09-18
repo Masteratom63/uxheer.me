@@ -129,6 +129,17 @@ export default function ProjectCard({
             </div>
           )}
 
+          {artworkType === 'visual' && (
+            <div className="artwork-spatial-visual">
+              <div className="visual-card-silhouette">
+                <span className="visual-silhouette-line" />
+                <span className="visual-silhouette-line short" />
+                <div className="visual-silhouette-chip" />
+              </div>
+              <div className="visual-card-underlay" />
+            </div>
+          )}
+
           {artworkType === 'matrix' && (
             <div className="artwork-spatial-matrix">
               <div className="matrix-capsule cap-1" />

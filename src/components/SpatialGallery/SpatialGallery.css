@@ -334,6 +334,67 @@
   align-self: flex-end;
 }
 
+/* Artwork: Visual Communication Card Preview */
+.artwork-spatial-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.visual-card-silhouette {
+  width: 110px;
+  height: 140px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(20, 28, 55, 0.95), rgba(7, 11, 26, 0.95));
+  border: 1px solid rgba(0, 209, 255, 0.28);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 209, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 12px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+  transform: rotate(-3deg);
+  transition: transform 0.3s ease;
+}
+
+.visual-card-underlay {
+  position: absolute;
+  width: 110px;
+  height: 140px;
+  border-radius: 14px;
+  background: rgba(14, 18, 38, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transform: rotate(5deg) translate(6px, 6px);
+  z-index: 1;
+}
+
+.visual-silhouette-line {
+  height: 2px;
+  width: 48px;
+  background: #00D1FF;
+  border-radius: 1px;
+}
+
+.visual-silhouette-line.short {
+  width: 28px;
+  background: #14FF00;
+  margin-top: 4px;
+}
+
+.visual-silhouette-chip {
+  width: 24px;
+  height: 16px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, rgba(0, 209, 255, 0.4), rgba(20, 255, 0, 0.3));
+  border: 1px solid rgba(0, 209, 255, 0.5);
+  align-self: flex-end;
+}
+
 .spatial-project-wrapper.clickable {
   cursor: pointer;
 }

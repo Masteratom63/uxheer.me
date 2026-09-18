@@ -35,6 +35,7 @@ export default function Project01Scene({
   onOpenComplete,
   onExitTrigger,
   onExitComplete,
+  onContinueToProject02,
 }) {
   const containerRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -43,6 +44,16 @@ export default function Project01Scene({
   const handleTriggerExit = () => {
     if (lifecycleState !== 'OPEN') return;
     if (onExitTrigger) {
+      onExitTrigger();
+    }
+  };
+
+  // Trigger smooth transition toward Project 02
+  const handleContinueToProject02 = () => {
+    if (lifecycleState !== 'OPEN') return;
+    if (onContinueToProject02) {
+      onContinueToProject02();
+    } else if (onExitTrigger) {
       onExitTrigger();
     }
   };
@@ -973,7 +984,7 @@ export default function Project01Scene({
 
               <button
                 className="exit-spatial-btn"
-                onClick={handleTriggerExit}
+                onClick={handleContinueToProject02}
                 aria-label="Continue to Project 02"
               >
                 <span>CONTINUE TOWARD PROJECT 02</span>
