@@ -58,28 +58,13 @@ body {
   min-height: 100vh;
 }
 
-/* Particle environment inside full project presentation */
+/* Particle environment inside full project presentation or closing */
 .spatial-experience.project-opening .intro-canvas,
-.spatial-experience.project-open .intro-canvas {
-  opacity: 0 !important;
-  pointer-events: none !important;
-  transition: opacity 0.6s ease;
-}
-
-/* Symmetrical smooth fade-in of home cosmos during project exit wave */
+.spatial-experience.project-open .intro-canvas,
 .spatial-experience.project-closing .intro-canvas {
   opacity: 0 !important;
   pointer-events: none !important;
-  animation: homeCanvasFadeIn 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards !important;
-}
-
-@keyframes homeCanvasFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 0.85;
-  }
+  transition: opacity 0.35s ease;
 }
 
 .spatial-experience.project-active .intro-canvas-fg {
@@ -88,12 +73,38 @@ body {
 }
 
 .spatial-experience.project-open .spatial-gallery-fixed-viewport,
-.spatial-experience.project-opening .spatial-gallery-fixed-viewport {
+.spatial-experience.project-opening .spatial-gallery-fixed-viewport,
+.spatial-experience.project-closing .spatial-gallery-fixed-viewport {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* Seamless Black Transition Curtain for Project 01 Exit */
+.spatial-black-curtain {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #000000;
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.spatial-black-curtain.stage-fade-to-black {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.spatial-black-curtain.stage-fade-in-content {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 

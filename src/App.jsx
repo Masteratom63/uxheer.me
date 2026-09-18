@@ -24,19 +24,32 @@ export default function App() {
   const [stage, setStage] = useState('intro'); // 'intro' | 'experience'
   // Explicit Project 01 Lifecycle: 'CLOSED' | 'OPENING' | 'OPEN' | 'CLOSING'
   const [projectState, setProjectState] = useState('CLOSED');
+  // Transition curtain state: 'idle' | 'fade-to-black' | 'fade-in-content'
+  const [exitTransitionStage, setExitTransitionStage] = useState('idle');
   const currentRatioRef = useRef(0);
   const rafIdRef = useRef(null);
+  const transitionTimerRef = useRef(null);
+  const fadeTimerRef = useRef(null);
 
   const isProjectActive = projectState !== 'CLOSED';
+  const isScrollLocked = stage === 'intro' || projectState !== 'CLOSED' || exitTransitionStage !== 'idle';
+
+  // Cleanup transition timers on unmount
+  useEffect(() => {
+    return () => {
+      if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+      if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+    };
+  }, []);
 
   // Callback when particle intro completes dispersal
   const handleIntroComplete = useCallback(() => {
     setStage('experience');
   }, []);
 
-  // Lock scroll during intro or while inside full project presentation
+  // Lock scroll during intro, project view, or exit transition
   useEffect(() => {
-    if (stage === 'intro' || isProjectActive) {
+    if (isScrollLocked) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
       if (stage === 'intro') {
@@ -46,12 +59,12 @@ export default function App() {
       document.body.style.overflowY = 'auto';
       document.documentElement.style.overflowY = 'auto';
     }
-  }, [stage, isProjectActive]);
+  }, [stage, isScrollLocked]);
 
   // High-performance continuous scroll & camera lerp engine
   // Pauses while Project 01 is active so homepage scroll never conflicts with Project 01
   useEffect(() => {
-    if (stage === 'intro' || isProjectActive) return;
+    if (stage === 'intro' || projectState !== 'CLOSED') return;
 
     let isRunning = true;
 
@@ -80,7 +93,7 @@ export default function App() {
       isRunning = false;
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     };
-  }, [stage, isProjectActive]);
+  }, [stage, projectState]);
 
   // Explicit State Machine: Enter Project 01 (CLOSED -> OPENING)
   const handleEnterProject01 = useCallback(() => {
@@ -99,34 +112,55 @@ export default function App() {
   }, []);
 
   // Explicit State Machine: Trigger Exit Wave (OPEN -> CLOSING)
+  // Fade animation begins when the ripple animation begins!
   const handleTriggerExit = useCallback(() => {
     setProjectState((prev) => {
       if (prev !== 'OPEN') return prev; // Ignore if already closing
-      // Immediately pre-position homepage scroll and spatial frame to 0.16
-      // so the gallery card and particle field are ready behind the scenes for the crossfade
+      return 'CLOSING';
+    });
+
+    // 1. Fade animation begins immediately when the ripple begins
+    setExitTransitionStage('fade-to-black');
+
+    // 2. Once solid black and ripple has expanded (650ms), load homepage stuff behind curtain
+    transitionTimerRef.current = setTimeout(() => {
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const targetScroll = maxScroll * 0.16;
       window.scrollTo({ top: targetScroll, behavior: 'instant' });
       currentRatioRef.current = 0.16;
       updateSpatial(0.16);
-      return 'CLOSING';
-    });
+      setProjectState('CLOSED');
+
+      // 3. Allow 120ms while screen is 100% black for homepage elements & canvases to mount, paint, and stabilize
+      fadeTimerRef.current = setTimeout(() => {
+        // Broadcast spatial updates to ensure all settled cards are at peak focal accuracy
+        updateSpatial(0.16);
+
+        // 4. Fade animation ends AFTER the stuff has been loaded on the home page
+        setExitTransitionStage('fade-in-content');
+
+        setTimeout(() => {
+          setExitTransitionStage('idle');
+        }, 650);
+      }, 120);
+    }, 650);
   }, []);
 
-  // Explicit State Machine: Exit Wave Complete (CLOSING -> CLOSED)
+  // Exit Wave Complete fallback handler
   const handleExitComplete = useCallback(() => {
-    setProjectState((prev) => {
-      if (prev !== 'CLOSING') return prev;
-      currentRatioRef.current = 0.16;
-      updateSpatial(0.16);
-      return 'CLOSED';
-    });
+    // Synchronously coordinated inside handleTriggerExit
   }, []);
 
   const isIntroFinished = stage === 'experience';
 
   return (
     <main className={`spatial-experience ${isProjectActive ? 'project-active' : ''} project-${projectState.toLowerCase()}`}>
+      {/* Seamless Black Transition Curtain for Project 01 Exit */}
+      <div
+        className={`spatial-black-curtain stage-${exitTransitionStage}`}
+        aria-hidden="true"
+      />
+
       {/* ONE Persistent 3D Spatial Particle Field throughout the Homepage */}
       <ParticleIntro
         onComplete={handleIntroComplete}

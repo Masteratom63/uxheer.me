@@ -16,12 +16,6 @@ export default function SpatialGallery({ isIntroFinished, onEnterProject01, proj
     return null;
   }
 
-  // During active reading (OPEN), hide gallery completely
-  if (projectState === 'OPEN') {
-    return null;
-  }
-
-  const isClosing = projectState === 'CLOSING';
   const isOpening = projectState === 'OPENING';
 
   const projects = [
@@ -57,7 +51,7 @@ export default function SpatialGallery({ isIntroFinished, onEnterProject01, proj
 
   return (
     <div
-      className={`spatial-gallery-fixed-viewport ${isClosing ? 'gallery-closing' : ''} ${isOpening ? 'gallery-opening' : ''}`}
+      className={`spatial-gallery-fixed-viewport ${isOpening ? 'gallery-opening' : ''}`}
       aria-label="Work Gallery"
       style={isOpening ? { opacity: 0, pointerEvents: 'none', display: 'none' } : undefined}
     >
