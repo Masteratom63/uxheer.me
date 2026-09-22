@@ -168,25 +168,21 @@ export default function Project02Scene({
             </p>
 
             <div className="project02-scroll-cue" aria-hidden="true">
-              <span className="minimal-scroll-text">SCROLL</span>
+              <span className="minimal-scroll-text">SCROLL ↓</span>
               <span className="minimal-scroll-line" />
             </div>
           </header>
 
           {/* =================================================================== */}
-          {/* SECTION 02 & 03 — CURRENT WORK & VISUAL SERIES (7 Instagram Pieces) */}
+          {/* SECTION 02 — SELECTED CURRENT WORK (Primary Exhibition) */}
           {/* =================================================================== */}
           <section className="project02-chapter chapter-current-work">
             <div className="chapter-marker">
               <span className="chapter-num">01</span>
-              <span className="chapter-label">CURRENT WORK</span>
+              <span className="chapter-label">SELECTED CURRENT WORK</span>
             </div>
 
-            <p className="section-lead-para">
-              Design as visual storytelling—capturing architecture, place, and tangible brand artifacts.
-            </p>
-
-            {/* Sequence 1: Ahmedabad Urban Study (Diptych Narrative) */}
+            {/* Exhibit 01: Ahmedabad */}
             <article className="visual-exhibit-block exhibit-ahmedabad">
               <div className="exhibit-header">
                 <span className="exhibit-tag">URBAN STUDY · 2026</span>
@@ -203,9 +199,7 @@ export default function Project02Scene({
                       loading="eager"
                     />
                   </div>
-                  <span className="artwork-caption">
-                    Full Composition — Monumental condensed typography framing human warmth and historic stone architecture.
-                  </span>
+                  <span className="artwork-caption">FULL COMPOSITION</span>
                 </div>
 
                 <div className="artwork-stage detail-stage">
@@ -217,14 +211,12 @@ export default function Project02Scene({
                       loading="lazy"
                     />
                   </div>
-                  <span className="artwork-caption">
-                    Type & Context Detail — Structural balance between typographic hierarchy and narrative imagery.
-                  </span>
+                  <span className="artwork-caption">TYPE / CONTEXT DETAIL</span>
                 </div>
               </div>
             </article>
 
-            {/* Sequence 2: Nature Magazine — Canada Feature */}
+            {/* Exhibit 02: Canada */}
             <article className="visual-exhibit-block exhibit-magazine">
               <div className="exhibit-header">
                 <span className="exhibit-tag">EDITORIAL PUBLICATION · WINTER 2025</span>
@@ -240,16 +232,10 @@ export default function Project02Scene({
                     loading="lazy"
                   />
                 </div>
-                <div className="exhibit-editorial-note">
-                  <p className="note-lead">Atmospheric Typography Integration</p>
-                  <p className="note-body">
-                    Translucent letterforms embedded into alpine cloud cover, paired with deliberate hierarchy across glacial lake waters.
-                  </p>
-                </div>
               </div>
             </article>
 
-            {/* Sequence 3: The Explorer Series — Nilgiris & Ooty */}
+            {/* Exhibit 03: Nilgiris & Ooty */}
             <article className="visual-exhibit-block exhibit-explorer">
               <div className="exhibit-header">
                 <span className="exhibit-tag">LANDSCAPE PUBLICATION · VOL. 01</span>
@@ -266,9 +252,7 @@ export default function Project02Scene({
                       loading="lazy"
                     />
                   </div>
-                  <span className="artwork-caption">
-                    Scale Study — Typographic anchor overlaid onto high-altitude tea plantation topography.
-                  </span>
+                  <span className="artwork-caption">SCALE STUDY</span>
                 </div>
 
                 <div className="artwork-stage full-stage">
@@ -280,14 +264,12 @@ export default function Project02Scene({
                       loading="lazy"
                     />
                   </div>
-                  <span className="artwork-caption">
-                    Complete Editorial Cover — Aerial winding road through lush terraces with serif editorial captioning.
-                  </span>
+                  <span className="artwork-caption">EDITORIAL COVER</span>
                 </div>
               </div>
             </article>
 
-            {/* Sequence 4: Brand Identity & Tactile Artifact */}
+            {/* Exhibit 04: Identity */}
             <article className="visual-exhibit-block exhibit-identity">
               <div className="exhibit-header">
                 <span className="exhibit-tag">IDENTITY & TACTILE PRINT</span>
@@ -304,9 +286,7 @@ export default function Project02Scene({
                       loading="lazy"
                     />
                   </div>
-                  <span className="artwork-caption">
-                    Metaphor & Medium — Classical art framing the modern digital-first discipline taxonomy.
-                  </span>
+                  <span className="artwork-caption">METAPHOR / MEDIUM</span>
                 </div>
 
                 <div className="artwork-stage square-stage">
@@ -318,21 +298,19 @@ export default function Project02Scene({
                       loading="lazy"
                     />
                   </div>
-                  <span className="artwork-caption">
-                    Physical Expression — Tactile matte dark stock with luminous cyan accents and QR portfolio link.
-                  </span>
+                  <span className="artwork-caption">PHYSICAL EXPRESSION</span>
                 </div>
               </div>
             </article>
           </section>
 
           {/* =================================================================== */}
-          {/* SECTION 04 — EXPLORATION / ALTERNATE */}
+          {/* SECTION 03 — EXPLORATION */}
           {/* =================================================================== */}
           <section className="project02-chapter chapter-exploration">
             <div className="chapter-marker">
               <span className="chapter-num">02</span>
-              <span className="chapter-label">EXPLORATION & PROCESS</span>
+              <span className="chapter-label">EXPLORATION</span>
             </div>
 
             <div className="editorial-statement-block">
@@ -341,7 +319,7 @@ export default function Project02Scene({
               </h2>
               <div className="statement-context-body">
                 <p>
-                  Before finalizing the Nilgiris cover, multiple iterations explored title weight, letter tracking, and foreground hierarchy to test how heavy condensed typography balanced with expansive natural textures.
+                  Before finalizing the Nilgiris cover, multiple iterations explored title weight, letter tracking, and foreground hierarchy against expansive natural textures.
                 </p>
               </div>
             </div>
@@ -357,9 +335,7 @@ export default function Project02Scene({
                     loading="lazy"
                   />
                 </div>
-                <span className="artwork-caption">
-                  Option 01 — Direct title placement testing baseline alignment against hill contours.
-                </span>
+                <span className="artwork-caption">OPTION 01</span>
               </div>
 
               <div className="artwork-stage exploration-item dominant-item">
@@ -372,31 +348,25 @@ export default function Project02Scene({
                     loading="lazy"
                   />
                 </div>
-                <span className="artwork-caption">
-                  Option 02 — High-density condensed type scale study testing depth separation.
-                </span>
+                <span className="artwork-caption">OPTION 02</span>
               </div>
             </div>
           </section>
 
           {/* =================================================================== */}
-          {/* SECTION 05 — SELECTED EARLIER WORK */}
+          {/* SECTION 04 — ARCHIVE */}
           {/* =================================================================== */}
-          <section className="project02-chapter chapter-earlier-work">
+          <section className="project02-chapter chapter-archive">
             <div className="chapter-marker">
               <span className="chapter-num">03</span>
-              <span className="chapter-label">SELECTED EARLIER WORK</span>
+              <span className="chapter-label">ARCHIVE</span>
             </div>
 
-            <p className="section-lead-para">
-              Archival visual communications spanning editorial layouts, publication covers, and physical collateral.
-            </p>
-
-            {/* Earlier Spread & Magazine */}
             <div className="earlier-work-stream">
-              <div className="earlier-work-row">
-                <div className="earlier-card">
-                  <span className="earlier-meta">EDITORIAL SPREAD · COVER</span>
+              {/* Archive Row 01: Editorial Spread */}
+              <div className="archive-spread-block">
+                <span className="earlier-meta">EDITORIAL SPREAD</span>
+                <div className="archive-spread-grid">
                   <div className="artwork-frame">
                     <img
                       src={coverOld}
@@ -405,10 +375,6 @@ export default function Project02Scene({
                       loading="lazy"
                     />
                   </div>
-                </div>
-
-                <div className="earlier-card">
-                  <span className="earlier-meta">EDITORIAL SPREAD · INTERIOR</span>
                   <div className="artwork-frame">
                     <img
                       src={page2Old}
@@ -420,9 +386,10 @@ export default function Project02Scene({
                 </div>
               </div>
 
+              {/* Archive Row 02: Publication / Identity & Collateral */}
               <div className="earlier-work-row">
                 <div className="earlier-card">
-                  <span className="earlier-meta">PUBLICATION STUDY · CANADA</span>
+                  <span className="earlier-meta">PUBLICATION / IDENTITY</span>
                   <div className="artwork-frame">
                     <img
                       src={canadaCoverOld}
@@ -434,7 +401,7 @@ export default function Project02Scene({
                 </div>
 
                 <div className="earlier-card">
-                  <span className="earlier-meta">IDENTITY COLLATERAL · ITERATIONS</span>
+                  <span className="earlier-meta">IDENTITY COLLATERAL</span>
                   <div className="dual-card-stack">
                     <div className="artwork-frame compact-frame">
                       <img
@@ -459,41 +426,11 @@ export default function Project02Scene({
           </section>
 
           {/* =================================================================== */}
-          {/* SECTION 06 — ACROSS FORMATS */}
-          {/* =================================================================== */}
-          <section className="project02-chapter chapter-formats">
-            <div className="chapter-marker">
-              <span className="chapter-num">04</span>
-              <span className="chapter-label">ACROSS FORMATS</span>
-            </div>
-
-            <div className="formats-manifesto-strip">
-              <span className="format-item">SOCIAL</span>
-              <span className="format-dot" aria-hidden="true">·</span>
-              <span className="format-item">EDITORIAL</span>
-              <span className="format-dot" aria-hidden="true">·</span>
-              <span className="format-item">IDENTITY</span>
-              <span className="format-dot" aria-hidden="true">·</span>
-              <span className="format-item">PRINT</span>
-              <span className="format-dot" aria-hidden="true">·</span>
-              <span className="format-item highlight">VISUAL COMMUNICATION</span>
-            </div>
-
-            <p className="formats-subtext">
-              Unified by typographic clarity, controlled hierarchy, and respect for negative space across physical and digital mediums.
-            </p>
-          </section>
-
-          {/* =================================================================== */}
-          {/* SECTION 07 — EXIT */}
+          {/* SECTION 05 — EXIT */}
           {/* =================================================================== */}
           <footer className="project02-chapter project02-exit-chapter">
             <div className="exit-spatial-wrapper">
-              <span className="exit-eyebrow">PORTFOLIO CONTINUATION</span>
-              <h3 className="exit-prompt-title">End of Visual Communication</h3>
-              <p className="exit-prompt-desc">
-                Continue traveling through the selected work or return to previous chapters.
-              </p>
+              <h3 className="exit-prompt-title">END OF VISUAL COMMUNICATION</h3>
 
               <div className="exit-nav-group">
                 <button
@@ -503,7 +440,16 @@ export default function Project02Scene({
                   type="button"
                 >
                   <span className="exit-arrow-prev" aria-hidden="true">←</span>
-                  <span>GO BACK TO PROJECT 01</span>
+                  <span>PROJECT 01</span>
+                </button>
+
+                <button
+                  className="exit-spatial-btn exit-home-btn"
+                  onClick={handleTriggerExit}
+                  aria-label="Return to portfolio space"
+                  type="button"
+                >
+                  <span>PORTFOLIO SPACE</span>
                 </button>
 
                 <button
@@ -512,19 +458,10 @@ export default function Project02Scene({
                   aria-label="Go to Project 03"
                   type="button"
                 >
-                  <span>GO TO PROJECT 03</span>
+                  <span>PROJECT 03</span>
                   <span className="exit-arrow" aria-hidden="true">→</span>
                 </button>
               </div>
-
-              <button
-                className="exit-spatial-sublink"
-                onClick={handleTriggerExit}
-                aria-label="Return to portfolio space"
-                type="button"
-              >
-                RETURN TO PORTFOLIO SPACE
-              </button>
             </div>
           </footer>
         </div>

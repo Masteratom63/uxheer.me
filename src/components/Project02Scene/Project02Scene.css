@@ -333,11 +333,14 @@
 }
 
 .artwork-caption {
-  display: block;
-  font-size: 0.88rem;
-  line-height: 1.6;
-  color: #8fa0b5;
-  margin-top: 1rem;
+  display: inline-block;
+  font-family: monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #7d93b3;
+  margin-top: 0.9rem;
+  text-transform: uppercase;
 }
 
 /* 1. Ahmedabad Diptych */
@@ -520,6 +523,24 @@
   text-transform: uppercase;
 }
 
+.archive-spread-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.archive-spread-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+}
+
+@media (min-width: 768px) {
+  .archive-spread-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+}
+
 .dual-card-stack {
   display: flex;
   flex-direction: column;
@@ -531,84 +552,30 @@
 }
 
 /* ===================================================================
-   SECTION 06 — ACROSS FORMATS
-   =================================================================== */
-.formats-manifesto-strip {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 1.85rem 2.25rem;
-  border-radius: 20px;
-  background: linear-gradient(135deg, rgba(14, 20, 44, 0.7) 0%, rgba(8, 12, 28, 0.85) 100%);
-  border: 1px solid rgba(0, 209, 255, 0.2);
-  margin-bottom: 1.5rem;
-}
-
-.format-item {
-  font-family: monospace;
-  font-size: clamp(0.85rem, 1.8vw, 1.15rem);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  color: #ffffff;
-  text-transform: uppercase;
-}
-
-.format-item.highlight {
-  color: #00D1FF;
-}
-
-.format-dot {
-  color: rgba(255, 255, 255, 0.25);
-  font-weight: 700;
-}
-
-.formats-subtext {
-  font-size: 0.95rem;
-  line-height: 1.65;
-  color: #8fa0b5;
-  max-width: 620px;
-  margin: 0;
-}
-
-/* ===================================================================
-   SECTION 07 — EXIT
+   SECTION 05 — EXIT
    =================================================================== */
 .project02-exit-chapter {
   margin-top: 8rem;
   margin-bottom: 2rem;
-  padding-top: 4rem;
+  padding-top: 5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: center;
 }
 
 .exit-spatial-wrapper {
-  max-width: 580px;
-}
-
-.exit-eyebrow {
-  display: block;
-  font-family: monospace;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  color: #00D1FF;
-  margin-bottom: 0.85rem;
-  text-transform: uppercase;
+  max-width: 680px;
+  width: 100%;
+  text-align: center;
 }
 
 .exit-prompt-title {
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: #ffffff;
-  margin: 0 0 1rem;
-}
-
-.exit-prompt-desc {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: #a4bad7;
-  margin: 0 0 2.25rem;
+  margin: 0 0 2.5rem;
+  text-transform: uppercase;
 }
 
 .exit-nav-group {
@@ -616,26 +583,25 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 1.25rem;
-  margin-bottom: 1.75rem;
+  gap: 1rem;
 }
 
 .exit-spatial-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.95rem 1.85rem;
+  gap: 0.65rem;
+  padding: 0.9rem 1.75rem;
   border-radius: 999px;
   background: linear-gradient(135deg, rgba(0, 209, 255, 0.15) 0%, rgba(0, 209, 255, 0.05) 100%);
   border: 1px solid rgba(0, 209, 255, 0.45);
   color: #00D1FF;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 24px rgba(0, 209, 255, 0.15);
+  box-shadow: 0 0 24px rgba(0, 209, 255, 0.12);
 }
 
 .exit-spatial-btn:hover {
@@ -648,9 +614,9 @@
 
 .exit-spatial-btn.exit-prev-btn {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: #f1f3f9;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
 }
 
 .exit-spatial-btn.exit-prev-btn:hover {
@@ -661,9 +627,23 @@
   transform: translateY(-2px);
 }
 
+.exit-spatial-btn.exit-home-btn {
+  background: rgba(14, 20, 44, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #a4bad7;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+}
+
+.exit-spatial-btn.exit-home-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
 .exit-arrow,
 .exit-arrow-prev {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   transition: transform 0.25s ease;
 }
 
@@ -675,32 +655,14 @@
   transform: translateX(-4px);
 }
 
-.exit-spatial-sublink {
-  display: block;
-  margin: 0 auto;
-  background: transparent;
-  border: none;
-  color: #718096;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  transition: color 0.2s ease;
-}
-
-.exit-spatial-sublink:hover {
-  color: #cbd5e0;
-}
-
-@media (max-width: 640px) {
+@media (max-width: 680px) {
   .exit-nav-group {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
-    max-width: 320px;
-    margin: 0 auto 1.75rem;
+    max-width: 280px;
+    margin: 0 auto;
+    gap: 0.85rem;
   }
 
   .exit-spatial-btn {

@@ -976,20 +976,28 @@ export default function Project01Scene({
           {/* =================================================================== */}
           <footer className="project-chapter project-exit-chapter">
             <div className="exit-spatial-wrapper">
-              <span className="exit-eyebrow">PORTFOLIO CONTINUATION</span>
-              <h3 className="exit-prompt-title">End of Project 01</h3>
-              <p className="exit-prompt-desc">
-                Return to the spatial cosmos and continue exploring the selected work.
-              </p>
+              <h3 className="exit-prompt-title">END OF SCOTIABANK SCENE+</h3>
 
-              <button
-                className="exit-spatial-btn"
-                onClick={handleContinueToProject02}
-                aria-label="Continue to Project 02"
-              >
-                <span>CONTINUE TOWARD PROJECT 02</span>
-                <span className="exit-arrow" aria-hidden="true">→</span>
-              </button>
+              <div className="exit-nav-group">
+                <button
+                  className="exit-spatial-btn exit-home-btn"
+                  onClick={handleTriggerExit}
+                  aria-label="Return to portfolio space"
+                  type="button"
+                >
+                  <span>PORTFOLIO SPACE</span>
+                </button>
+
+                <button
+                  className="exit-spatial-btn exit-next-btn"
+                  onClick={handleContinueToProject02}
+                  aria-label="Go to Project 02"
+                  type="button"
+                >
+                  <span>PROJECT 02</span>
+                  <span className="exit-arrow" aria-hidden="true">→</span>
+                </button>
+              </div>
             </div>
           </footer>
         </div>
