@@ -63,7 +63,7 @@ export const INTRO_CONFIG = {
     motion: {
       ambientDriftSpeed: 0.0006, // Natural slow harmonic floating
       microDriftAmplitude: 0.45, // Living breathing motion on letters during hold phase (sub-pixel)
-      arrivalStaggerMax: 0.65,   // Seconds of randomized stagger when particles begin converging
+      arrivalStaggerMax: 0.30,   // Seconds of randomized stagger when particles begin converging
     },
 
     // Color Palette (Strictly UXHeer brand colors: Cyan #00D1FF, Green #14FF00, Soft Whites)
@@ -88,34 +88,34 @@ export const INTRO_CONFIG = {
     // Phase 1: Arrival (Screen is dark, subtle particles already floating)
     arrival: {
       start: 0.0,
-      duration: 2.0,
+      duration: 0.8,
     },
     // Phase 2: Logo Presence (Logo subtly reveals and floats with particles around it)
     logo: {
-      start: 1.8,
-      fadeInDuration: 0.8,
-      visibleDuration: 1.6,
-      fadeOutDuration: 0.6,
-      end: 4.0,
+      start: 0.6,
+      fadeInDuration: 0.40,
+      visibleDuration: 0.55,
+      fadeOutDuration: 0.35,
+      end: 1.9,
     },
     // Phase 3: Name Formation (Particles smoothly converge into typography)
     formation: {
-      start: 3.8,
-      duration: 3.2,
+      start: 1.7,
+      duration: 1.6,
       easing: 'cubicOut', // smooth cinematic ease
     },
     // Phase 4: Hold (HEER PATEL holds clearly with subtle breathing drift)
     hold: {
-      start: 7.0,
-      duration: 2.4,
+      start: 3.3,
+      duration: 0.9,
     },
     // Phase 5: Transition Out (Particles gently separate into depth, fading to dark)
     dispersal: {
-      start: 9.4,
-      duration: 2.4,
+      start: 4.2,
+      duration: 0.8,
     },
     // Total sequence length before ready state
-    totalDuration: 11.8,
+    totalDuration: 5.0,
   },
 
   // Camera Settings

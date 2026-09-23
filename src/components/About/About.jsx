@@ -18,7 +18,7 @@ export default function About({ isIntroFinished }) {
 
     const focusPoint = 0.61;
     const approachWindow = 0.10;
-    const departWindow = 0.09;
+    const departWindow = 0.12;
 
     return subscribeSpatial((scrollRatio) => {
       const el = rootRef.current;

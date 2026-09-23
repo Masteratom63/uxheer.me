@@ -18,24 +18,22 @@ export default function Contact({ isIntroFinished }) {
       const el = rootRef.current;
       if (!el) return;
 
-      if (scrollRatio < 0.82) {
-        el.style.display = 'none';
+      if (scrollRatio < 0.77) {
         el.style.visibility = 'hidden';
         el.style.opacity = 0;
         el.style.pointerEvents = 'none';
         return;
       }
 
-      el.style.display = 'flex';
       el.style.visibility = 'visible';
-      const entryProgress = Math.min(1, (scrollRatio - 0.82) / 0.11);
-      const opacity = Math.max(0, entryProgress);
-      const z = (1 - entryProgress) * -400;
+      const entryProgress = Math.min(1, Math.max(0, (scrollRatio - 0.77) / 0.15));
+      const opacity = entryProgress;
+      const z = (1 - entryProgress) * -350;
       const scale = 0.92 + entryProgress * 0.08;
 
       el.style.transform = `translate3d(0, 0, ${z}px) scale(${scale})`;
       el.style.opacity = opacity;
-      el.style.pointerEvents = opacity > 0.1 ? 'auto' : 'none';
+      el.style.pointerEvents = opacity > 0.4 ? 'auto' : 'none';
     });
   }, [isIntroFinished]);
 
@@ -47,7 +45,7 @@ export default function Contact({ isIntroFinished }) {
     <section
       ref={rootRef}
       className="spatial-contact-screen"
-      style={{ display: 'none', visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}
+      style={{ visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}
       aria-label="Contact"
     >
       <div className="contact-editorial-wrapper">

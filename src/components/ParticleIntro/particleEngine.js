@@ -213,12 +213,12 @@ export function getSectionIntensity(scrollRatio) {
     const p = (scrollRatio - 0.54) / 0.14;
     return 0.86 - p * (0.86 - 0.60);
   }
-  if (scrollRatio <= 0.84) {
+  if (scrollRatio <= 0.77) {
     // CAPABILITIES: kinetic spatial energy
     return 0.78;
   }
   // CONTACT & END: calm, settled, deep hold
-  const p = Math.min(1, (scrollRatio - 0.84) / 0.14);
+  const p = Math.min(1, Math.max(0, (scrollRatio - 0.77) / 0.15));
   return 0.78 - p * (0.78 - 0.50);
 }
 
@@ -559,7 +559,7 @@ export function updateParticles(particles, time, width, height, scrollRatio = 0,
       targetX = p.x0 + driftX;
       targetY = p.y0 + driftY;
       targetZ = p.z0 + driftZ;
-      phaseAlphaMultiplier = Math.min(time / 0.8, 1.0);
+      phaseAlphaMultiplier = Math.min(time / 0.4, 1.0);
     } else if (time < tHoldStart) {
       // Phase 3: Name Formation (Convergence)
       const particleStartTime = tFormStart + p.stagger;
@@ -568,7 +568,7 @@ export function updateParticles(particles, time, width, height, scrollRatio = 0,
         targetY = p.y0 + driftY;
         targetZ = p.z0 + driftZ;
       } else {
-        const effectiveDuration = Math.max(tFormDuration - p.stagger, 1.0);
+        const effectiveDuration = Math.max(tFormDuration - p.stagger, 0.6);
         const rawProgress = Math.min((time - particleStartTime) / effectiveDuration, 1.0);
         const eased = easeOutQuint(rawProgress);
 

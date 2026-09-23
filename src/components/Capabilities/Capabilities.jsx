@@ -27,8 +27,8 @@ export default function Capabilities({ isIntroFinished }) {
     if (!isIntroFinished) return;
 
     const focusPoint = 0.77;
-    const approachWindow = 0.09;
-    const departWindow = 0.08;
+    const approachWindow = 0.13;
+    const departWindow = 0.12;
 
     return subscribeSpatial((scrollRatio) => {
       const root = rootRef.current;

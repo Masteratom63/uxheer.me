@@ -22,6 +22,17 @@ import { updateSpatial } from './utils/spatialController';
  *  5. CAPABILITIES: Multi-depth spatial typography composition
  *  6. CONTACT: "Have something worth building? Let's talk." & calm final end state
  */
+// Exact calibrated keyframe stops for each spatial section
+const SECTION_STOPS = [
+  0.00, // 0: Statement
+  0.16, // 1: Project 01 (Scotiabank Scene+)
+  0.34, // 2: Project 02 (Visual Communication)
+  0.48, // 3: Project 03 (Global Capital Exchange)
+  0.61, // 4: About / Approach
+  0.77, // 5: Capabilities
+  0.92, // 6: Contact & Calm End State
+];
+
 export default function App() {
   const [stage, setStage] = useState('intro'); // 'intro' | 'experience'
   // Explicit Project 01 Lifecycle: 'CLOSED' | 'OPENING' | 'OPEN' | 'CLOSING'
@@ -31,6 +42,10 @@ export default function App() {
   // Transition curtain state: 'idle' | 'fade-to-black' | 'fade-in-content'
   const [exitTransitionStage, setExitTransitionStage] = useState('idle');
   const currentRatioRef = useRef(0);
+  const targetRatioRef = useRef(0);
+  const currentSectionIndexRef = useRef(0);
+  const isTransitioningRef = useRef(false);
+  const transitionCooldownTimerRef = useRef(null);
   const rafIdRef = useRef(null);
   const transitionTimerRef = useRef(null);
   const fadeTimerRef = useRef(null);
@@ -43,12 +58,29 @@ export default function App() {
     return () => {
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
       if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+      if (transitionCooldownTimerRef.current) clearTimeout(transitionCooldownTimerRef.current);
     };
+  }, []);
+
+  // Jump or advance smoothly to exact section stop
+  const goToSection = useCallback((newIndex) => {
+    const clampedIndex = Math.max(0, Math.min(SECTION_STOPS.length - 1, newIndex));
+    currentSectionIndexRef.current = clampedIndex;
+    const targetRatio = SECTION_STOPS[clampedIndex];
+    targetRatioRef.current = targetRatio;
+
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const targetScroll = maxScroll * targetRatio;
+    window.scrollTo({ top: targetScroll, behavior: 'instant' });
   }, []);
 
   // Callback when particle intro completes dispersal
   const handleIntroComplete = useCallback(() => {
     setStage('experience');
+    currentSectionIndexRef.current = 0;
+    targetRatioRef.current = 0;
+    currentRatioRef.current = 0;
+    updateSpatial(0);
   }, []);
 
   // Lock scroll during intro, project view, or exit transition
@@ -66,7 +98,7 @@ export default function App() {
   }, [stage, isScrollLocked]);
 
   // High-performance continuous scroll & camera lerp engine
-  // Pauses while any project is active so homepage scroll never conflicts with project scene
+  // Smoothly drives spatial camera to exact section stop at responsive 0.16 speed
   useEffect(() => {
     if (stage === 'intro' || isProjectActive) return;
 
@@ -75,14 +107,15 @@ export default function App() {
     const lerpLoop = () => {
       if (!isRunning) return;
 
-      const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      const target = Math.max(0, Math.min(scrollY / maxScroll, 1));
+      const target = targetRatioRef.current;
 
-      // Weighty, responsive spatial camera smoothing with velocity damping
+      // Responsive spatial camera smoothing toward exact section stop
       const rawDiff = target - currentRatioRef.current;
-      const clampedDiff = Math.max(-0.05, Math.min(0.05, rawDiff));
-      currentRatioRef.current += clampedDiff * 0.095;
+      if (Math.abs(rawDiff) < 0.00005) {
+        currentRatioRef.current = target;
+      } else {
+        currentRatioRef.current += rawDiff * 0.16;
+      }
       const cur = currentRatioRef.current;
 
       // Broadcast to all spatial sections directly (Zero React reconciliations on scroll!)
@@ -98,6 +131,126 @@ export default function App() {
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     };
   }, [stage, isProjectActive]);
+
+  // Discrete Section-by-Section Scroll Trigger
+  // Advances cleanly between sections and stops exactly on each keyframe
+  useEffect(() => {
+    if (stage === 'intro' || isProjectActive) return;
+
+    let touchStartY = 0;
+    let touchStartX = 0;
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+
+      if (isTransitioningRef.current) return;
+      if (Math.abs(e.deltaY) < 16) return;
+
+      const direction = e.deltaY > 0 ? 1 : -1;
+      const nextIndex = currentSectionIndexRef.current + direction;
+
+      if (nextIndex >= 0 && nextIndex < SECTION_STOPS.length) {
+        isTransitioningRef.current = true;
+        goToSection(nextIndex);
+
+        clearTimeout(transitionCooldownTimerRef.current);
+        transitionCooldownTimerRef.current = setTimeout(() => {
+          isTransitioningRef.current = false;
+        }, 600);
+      }
+    };
+
+    const handleTouchStart = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].clientX;
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+    };
+
+    const handleTouchEnd = (e) => {
+      if (isTransitioningRef.current) return;
+      if (!e.changedTouches || e.changedTouches.length === 0) return;
+
+      const touchEndY = e.changedTouches[0].clientY;
+      const touchEndX = e.changedTouches[0].clientX;
+      const diffY = touchStartY - touchEndY;
+      const diffX = touchStartX - touchEndX;
+
+      if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 36) {
+        const direction = diffY > 0 ? 1 : -1;
+        const nextIndex = currentSectionIndexRef.current + direction;
+
+        if (nextIndex >= 0 && nextIndex < SECTION_STOPS.length) {
+          isTransitioningRef.current = true;
+          goToSection(nextIndex);
+
+          clearTimeout(transitionCooldownTimerRef.current);
+          transitionCooldownTimerRef.current = setTimeout(() => {
+            isTransitioningRef.current = false;
+          }, 550);
+        }
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      if (['ArrowDown', 'PageDown', ' '].includes(e.key) && !e.shiftKey) {
+        e.preventDefault();
+        if (!isTransitioningRef.current) {
+          const nextIndex = currentSectionIndexRef.current + 1;
+          if (nextIndex < SECTION_STOPS.length) {
+            isTransitioningRef.current = true;
+            goToSection(nextIndex);
+            clearTimeout(transitionCooldownTimerRef.current);
+            transitionCooldownTimerRef.current = setTimeout(() => {
+              isTransitioningRef.current = false;
+            }, 550);
+          }
+        }
+      } else if (['ArrowUp', 'PageUp'].includes(e.key) || (e.key === ' ' && e.shiftKey)) {
+        e.preventDefault();
+        if (!isTransitioningRef.current) {
+          const nextIndex = currentSectionIndexRef.current - 1;
+          if (nextIndex >= 0) {
+            isTransitioningRef.current = true;
+            goToSection(nextIndex);
+            clearTimeout(transitionCooldownTimerRef.current);
+            transitionCooldownTimerRef.current = setTimeout(() => {
+              isTransitioningRef.current = false;
+            }, 550);
+          }
+        }
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        goToSection(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        goToSection(SECTION_STOPS.length - 1);
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('keydown', handleKeyDown);
+      if (transitionCooldownTimerRef.current) {
+        clearTimeout(transitionCooldownTimerRef.current);
+      }
+    };
+  }, [stage, isProjectActive, goToSection]);
 
   // ===================================================================
   // Project 01 Handlers (Scotiabank Scene+)
@@ -129,6 +282,8 @@ export default function App() {
       const targetScroll = maxScroll * 0.16;
       window.scrollTo({ top: targetScroll, behavior: 'instant' });
       currentRatioRef.current = 0.16;
+      targetRatioRef.current = 0.16;
+      currentSectionIndexRef.current = 1;
       updateSpatial(0.16);
       setProjectState('CLOSED');
 
@@ -157,6 +312,8 @@ export default function App() {
       const targetScroll = maxScroll * 0.34;
       window.scrollTo({ top: targetScroll, behavior: 'instant' });
       currentRatioRef.current = 0.34;
+      targetRatioRef.current = 0.34;
+      currentSectionIndexRef.current = 2;
       updateSpatial(0.34);
       setProjectState('CLOSED');
       setProject02State('OPENING');
@@ -206,6 +363,8 @@ export default function App() {
       const targetScroll = maxScroll * 0.34;
       window.scrollTo({ top: targetScroll, behavior: 'instant' });
       currentRatioRef.current = 0.34;
+      targetRatioRef.current = 0.34;
+      currentSectionIndexRef.current = 2;
       updateSpatial(0.34);
       setProject02State('CLOSED');
 
@@ -234,6 +393,8 @@ export default function App() {
       const targetScroll = maxScroll * 0.16;
       window.scrollTo({ top: targetScroll, behavior: 'instant' });
       currentRatioRef.current = 0.16;
+      targetRatioRef.current = 0.16;
+      currentSectionIndexRef.current = 1;
       updateSpatial(0.16);
       setProject02State('CLOSED');
       setProjectState('OPENING');
@@ -263,6 +424,8 @@ export default function App() {
       const targetScroll = maxScroll * 0.48;
       window.scrollTo({ top: targetScroll, behavior: 'instant' });
       currentRatioRef.current = 0.48;
+      targetRatioRef.current = 0.48;
+      currentSectionIndexRef.current = 3;
       updateSpatial(0.48);
       setProject02State('CLOSED');
 
