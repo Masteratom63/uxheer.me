@@ -11,7 +11,7 @@ import './SpatialGallery.css';
  *  - Scroll 0.42 – 0.68: PROJECT 02 focal stage (centered at 0.54)
  *  - Scroll 0.72 – 1.00: PROJECT 03 focal stage (centered at 0.84)
  */
-export default function SpatialGallery({ isIntroFinished, onEnterProject01, onEnterProject02, projectState = 'CLOSED' }) {
+export default function SpatialGallery({ isIntroFinished, onEnterProject01, onEnterProject02, onEnterProject03, projectState = 'CLOSED' }) {
   if (!isIntroFinished) {
     return null;
   }
@@ -40,13 +40,14 @@ export default function SpatialGallery({ isIntroFinished, onEnterProject01, onEn
       exploreText: 'ENTER PROJECT',
     },
     {
+      id: 'porch-private',
       number: 'PROJECT 03',
-      title: 'Global Capital Exchange',
-      category: 'Financial Infrastructure',
+      title: 'PORCH PRIVATE',
+      category: 'PRODUCT / OBJECT / INDUSTRIAL DESIGN',
       focusPoint: 0.48,
       initialTilt: { rx: -1.0, ry: 1.5 },
-      artworkType: 'prism',
-      exploreText: 'VIEW PROJECT ARCHIVE',
+      artworkType: 'bench',
+      exploreText: 'ENTER PROJECT',
     },
   ];
 
@@ -73,6 +74,8 @@ export default function SpatialGallery({ isIntroFinished, onEnterProject01, onEn
                 ? onEnterProject01
                 : item.id === 'visual-communication'
                 ? onEnterProject02
+                : item.id === 'porch-private'
+                ? onEnterProject03
                 : undefined
             }
           />

@@ -1,0 +1,668 @@
+/* ===================================================================
+   Project03Scene — PORCH PRIVATE
+   Visual System: #050711 base, #00D1FF cyan accent, #C49258 cedar accent
+   Industrial / Physical Product Story, generous negative space
+   =================================================================== */
+
+.project03-scene-root {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  overflow: hidden;
+  background-color: #050711;
+  pointer-events: none;
+}
+
+/* 1. Dedicated Local Particle Canvas (Fixed behind content) */
+.project-local-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 2. Subtle Ambient Vignette & Spatial Atmosphere (Exact match to Project 01 & 02) */
+.project03-ambient-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  background: 
+    radial-gradient(circle at 50% 15%, rgba(13, 22, 48, 0.45) 0%, rgba(5, 7, 17, 0) 65%),
+    radial-gradient(circle at 80% 60%, rgba(0, 209, 255, 0.03) 0%, rgba(5, 7, 17, 0) 50%),
+    radial-gradient(circle at 20% 85%, rgba(20, 255, 0, 0.02) 0%, rgba(5, 7, 17, 0) 50%);
+  z-index: 0;
+}
+
+/* 2. Viewport-Fixed Sticky Dismiss Button (Always accessible in top-right) */
+.project03-spatial-dismiss {
+  position: fixed;
+  top: max(1.5rem, env(safe-area-inset-top, 1.5rem));
+  right: max(1.5rem, env(safe-area-inset-right, 1.5rem));
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  background: rgba(14, 18, 36, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #a0aec0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+}
+
+.project03-spatial-dismiss:hover {
+  background: rgba(0, 209, 255, 0.18);
+  color: #ffffff;
+  border-color: rgba(0, 209, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.dismiss-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+  color: #00D1FF;
+}
+
+/* 3. Dedicated Content Scroll Viewport */
+.project03-scroll-viewport {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  pointer-events: auto;
+  z-index: 2;
+  color: #f1f3f9;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Lifecycle-driven Content Visibility */
+.project03-scene-root.state-opening .project03-scroll-viewport {
+  opacity: 0;
+  pointer-events: none;
+  animation: project03ContentSettle 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.85s forwards;
+}
+
+@keyframes project03ContentSettle {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.project03-scene-root.state-open .project03-scroll-viewport {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.project03-scene-root.state-closing .project03-scroll-viewport {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.project03-scene-root.state-closing .project03-spatial-dismiss {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* Main Content Container */
+.project03-editorial-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 6rem 1.5rem 12rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .project03-editorial-content {
+    padding: 8rem 3rem 14rem;
+  }
+}
+
+/* Chapters & Section Layout */
+.project03-chapter {
+  margin-bottom: 7rem;
+}
+
+@media (min-width: 768px) {
+  .project03-chapter {
+    margin-bottom: 10rem;
+  }
+}
+
+/* ===================================================================
+   01 — ENTRY SECTION
+   =================================================================== */
+.intro-chapter {
+  min-height: calc(100vh - 12rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 6rem;
+}
+
+.project03-intro-meta {
+  margin-bottom: 1.5rem;
+}
+
+.project03-meta-pill {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #00D1FF;
+  display: inline-block;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(0, 209, 255, 0.08);
+  border: 1px solid rgba(0, 209, 255, 0.25);
+}
+
+.project03-headline-hero {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2.75rem, 8.5vw, 6.2rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+  margin: 0 0 2rem 0;
+  color: #ffffff;
+  max-width: 950px;
+}
+
+.project03-statement-lead {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(1.15rem, 2.8vw, 1.85rem);
+  font-weight: 400;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 680px;
+  margin: 0 0 3.5rem 0;
+}
+
+.project03-scroll-cue {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.minimal-scroll-line {
+  display: inline-block;
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(0, 209, 255, 0.6), transparent);
+}
+
+/* ===================================================================
+   CHAPTER HEADERS & PROSE
+   =================================================================== */
+.chapter-header-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding-bottom: 0.75rem;
+}
+
+.chapter-number {
+  font-family: 'Inter', monospace, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #00D1FF;
+}
+
+.chapter-title {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(1.2rem, 3.2vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.project03-prose {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 760px;
+  margin: 0 0 2.5rem 0;
+}
+
+.context-lead {
+  font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* ===================================================================
+   MEDIA FRAMES & IMAGERY
+   =================================================================== */
+.project03-media-frame {
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  background: rgba(14, 18, 36, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.project03-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Captions */
+.project03-caption-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.9rem 1.25rem;
+  background: rgba(8, 12, 24, 0.92);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.caption-tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #00D1FF;
+}
+
+.caption-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.center-caption {
+  justify-content: center;
+  border-radius: 0 0 18px 18px;
+}
+
+/* Section Specific Frames */
+
+/* 02. Problem: Porch Photo */
+.context-porch-frame {
+  max-width: 960px;
+}
+
+.context-porch-frame .project03-image {
+  max-height: 70vh;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* 03. Exploration: Sketch */
+.sketch-frame {
+  max-width: 960px;
+  background: #111420;
+}
+
+.sketch-frame .sketch-image {
+  max-height: 80vh;
+  object-fit: contain;
+  margin: 0 auto;
+  padding: 0.5rem;
+}
+
+/* 04. Development Progression */
+.development-progression-track {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 860px;
+}
+
+.development-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stage-meta-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stage-step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00D1FF;
+  box-shadow: 0 0 8px #00D1FF;
+}
+
+.stage-step-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.digital-draft-frame {
+  background: #151825;
+}
+
+.digital-draft-frame .project03-image {
+  max-height: 60vh;
+  object-fit: contain;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.progression-connector {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(0, 209, 255, 0.5);
+  font-size: 1.25rem;
+  padding-left: 1rem;
+}
+
+.connector-line {
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(0, 209, 255, 0.5), transparent);
+}
+
+/* 05. Refinement: Line Drawing */
+.refinement-frame {
+  max-width: 960px;
+  background: #1a1e2d;
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+}
+
+.line-drawing-image {
+  max-height: 55vh;
+  object-fit: contain;
+  margin: 0 auto;
+  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.6));
+}
+
+/* 06. The Final Object Hero Presentation */
+.chapter-final-object {
+  margin-top: 5rem;
+}
+
+.final-object-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.final-design-tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C49258;
+}
+
+.final-object-hero-stage {
+  position: relative;
+  width: 100%;
+  max-width: 1020px;
+  margin: 2rem auto 0;
+}
+
+.final-object-glow-backdrop {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 70%;
+  background: radial-gradient(ellipse at center, rgba(196, 146, 88, 0.18) 0%, rgba(5, 7, 17, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(40px);
+}
+
+.hero-product-frame {
+  position: relative;
+  z-index: 1;
+  background: #1e2230;
+  padding: 3.5rem 2rem;
+  box-sizing: border-box;
+  border: 1px solid rgba(196, 146, 88, 0.3);
+  box-shadow: 
+    0 32px 80px -16px rgba(0, 0, 0, 0.95),
+    0 0 40px rgba(196, 146, 88, 0.12);
+}
+
+.hero-product-image {
+  max-height: 65vh;
+  object-fit: contain;
+  margin: 0 auto;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
+}
+
+/* 07. In Context: Cinematic 4-Environment Display */
+.chapter-context {
+  margin-top: 5rem;
+}
+
+.cinematic-context-frame {
+  max-width: 1080px;
+  background: #0d101c;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 32px 80px -12px rgba(0, 0, 0, 0.95);
+}
+
+.cinematic-context-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ===================================================================
+   08 — EXIT SECTION
+/* ===================================================================
+   CHAPTER 08 — EXIT & RETURN NAVIGATION (Standardized to Project 01 & 02)
+   =================================================================== */
+.project03-exit-chapter {
+  margin-top: 8rem;
+  margin-bottom: 2rem;
+  padding-top: 5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: center;
+}
+
+.exit-spatial-wrapper {
+  max-width: 680px;
+  width: 100%;
+  text-align: center;
+}
+
+.project03-exit-quote {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+  font-weight: 300;
+  line-height: 1.5;
+  color: #e2e8f0;
+  margin: 0 auto 2.5rem;
+  max-width: 580px;
+}
+
+.exit-prompt-title {
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin: 0 0 2.5rem;
+  text-transform: uppercase;
+}
+
+.exit-nav-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.exit-spatial-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.9rem 1.75rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(0, 209, 255, 0.15) 0%, rgba(0, 209, 255, 0.05) 100%);
+  border: 1px solid rgba(0, 209, 255, 0.45);
+  color: #00D1FF;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 24px rgba(0, 209, 255, 0.12);
+}
+
+.exit-spatial-btn:hover {
+  background: #00D1FF;
+  border-color: #00D1FF;
+  color: #050711;
+  box-shadow: 0 0 35px rgba(0, 209, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.exit-spatial-btn.exit-prev-btn {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #f1f3f9;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.exit-spatial-btn.exit-prev-btn:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #050711;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.exit-spatial-btn.exit-home-btn {
+  background: rgba(14, 20, 44, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #a4bad7;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+}
+
+.exit-spatial-btn.exit-home-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.exit-arrow-prev {
+  font-size: 1.05rem;
+  transition: transform 0.25s ease;
+}
+
+.exit-spatial-btn:hover .exit-arrow-prev {
+  transform: translateX(-4px);
+}
+
+/* ===================================================================
+   RESPONSIVE DESIGN (Mobile & Tablet)
+   =================================================================== */
+@media (max-width: 640px) {
+  .project03-headline-hero {
+    font-size: 2.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .project03-statement-lead {
+    font-size: 1.05rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .project03-chapter {
+    margin-bottom: 5rem;
+  }
+
+  .chapter-header-row {
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-product-frame {
+    padding: 2rem 1rem;
+  }
+
+  .refinement-frame {
+    padding: 1.5rem 1rem;
+  }
+
+  .digital-draft-frame .project03-image {
+    padding: 0.75rem;
+  }
+
+  .exit-nav-group {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+    gap: 0.85rem;
+  }
+
+  .exit-spatial-btn {
+    justify-content: center;
+    width: 100%;
+  }
+}

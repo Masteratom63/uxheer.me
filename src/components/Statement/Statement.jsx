@@ -26,6 +26,7 @@ export default function Statement({ isVisible }) {
       const scale = 1 + p * 0.16;
       el.style.transform = `translate3d(0, 0, ${z}px) scale(${scale})`;
       el.style.opacity = opacity;
+      el.style.display = opacity <= 0.001 ? 'none' : 'flex';
       el.style.pointerEvents = opacity > 0.01 ? 'none' : 'none';
 
       if (promptRef.current) {

@@ -26,13 +26,14 @@
   height: 100%;
   display: block;
   pointer-events: none;
+  background-image: linear-gradient(transparent, transparent);
 }
 
 .intro-canvas-bg {
   z-index: 10;
 }
 
-/* Foreground canvas sits in front of project cards (z-index: 25) with zero pointer-events */
+/* Foreground canvas sits behind project cards (z-index: 25) so particles pass behind glass */
 .intro-canvas-fg {
   position: fixed;
   inset: 0;
@@ -41,7 +42,7 @@
   height: 100dvh;
   display: block;
   pointer-events: none;
-  z-index: 28;
+  z-index: 20;
 }
 
 /* --------------------------------------------------------------------------

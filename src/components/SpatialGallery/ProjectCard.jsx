@@ -63,7 +63,7 @@ export default function ProjectCard({
         rx = initialTilt.rx - v * 3;
       }
 
-      el.style.transform = `translate3d(-50%, -50%, 0) translate3d(0, 0, ${z}px) scale(${scale}) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      el.style.transform = `perspective(1100px) translate3d(-50%, -50%, 0) translate3d(0, 0, ${z}px) scale(${scale}) rotateX(${rx}deg) rotateY(${ry}deg)`;
       el.style.opacity = opacity;
       el.style.pointerEvents = opacity > 0.1 ? 'auto' : 'none';
     });
@@ -153,6 +153,28 @@ export default function ProjectCard({
               <div className="prism-facet facet-1" />
               <div className="prism-facet facet-2" />
               <div className="prism-line" />
+            </div>
+          )}
+
+          {artworkType === 'bench' && (
+            <div className="artwork-spatial-bench">
+              <div className="bench-silhouette-wrapper">
+                {/* 1. Sleek Bench Cushion Slab with Luminous Top Accent */}
+                <div className="bench-cushion-slab">
+                  <span className="bench-cushion-accent" />
+                </div>
+                {/* 2. Main Bench Storage Cabinet with 2 Inset Drawers */}
+                <div className="bench-cabinet-chassis">
+                  <div className="bench-compartment-drawer">
+                    <span className="bench-drawer-pull handle-cyan" />
+                  </div>
+                  <div className="bench-compartment-drawer">
+                    <span className="bench-drawer-pull handle-green" />
+                  </div>
+                </div>
+                {/* 3. Subtle Under-Cabinet Shadow & Ambient Glow */}
+                <div className="bench-chassis-shadow" aria-hidden="true" />
+              </div>
             </div>
           )}
         </div>

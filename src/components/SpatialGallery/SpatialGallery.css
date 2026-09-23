@@ -8,8 +8,6 @@
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  perspective: 1100px;
-  perspective-origin: 50% 50%;
   pointer-events: none; /* Allows all touch swipes to pass through to scroll */
   z-index: 25;
   overflow: hidden;
@@ -22,7 +20,6 @@
   position: relative;
   width: 100%;
   height: 100%;
-  transform-style: preserve-3d;
   pointer-events: none;
 }
 
@@ -35,31 +32,72 @@
   left: 50%;
   width: min(330px, 86vw);
   height: min(440px, 62vh);
-  transform-style: preserve-3d;
-  will-change: transform, opacity;
   pointer-events: none;
   touch-action: pan-y;
+  border-radius: 24px;
+  backdrop-filter: blur(3px) saturate(190%) contrast(115%);
+  -webkit-backdrop-filter: blur(3px) saturate(190%) contrast(115%);
 }
 
 .project-spatial-surface {
   width: 100%;
   height: 100%;
-  background: rgba(8, 12, 28, 0.82);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(10, 16, 38, 0.24) 100%);
+  backdrop-filter: blur(3px) saturate(190%) contrast(115%);
+  -webkit-backdrop-filter: blur(3px) saturate(190%) contrast(115%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 24px;
   padding: 22px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  /* Multi-sided refractive rim: bright inset bevel highlights mimicking physical lens thickness */
   box-shadow: 
-    0 24px 52px -12px rgba(0, 0, 0, 0.85),
-    0 0 0 1px rgba(255, 255, 255, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 24px 52px -12px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(0, 209, 255, 0.16),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.70),
+    inset 0 -1.5px 2px rgba(255, 255, 255, 0.35),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.25),
+    inset -1.5px 0 2px rgba(255, 255, 255, 0.25);
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   touch-action: pan-y;
+  transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* Glass Specular Reflection Overlay */
+.project-spatial-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.04) 28%,
+    rgba(0, 209, 255, 0.06) 58%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Glossy diagonal sheen below the text — sells the tactile liquid surface */
+.project-spatial-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.32) 0%,
+    rgba(255, 255, 255, 0.05) 28%,
+    transparent 58%
+  );
+  mix-blend-mode: screen;
 }
 
 /* Subtle top edge accent */
@@ -81,6 +119,8 @@
   width: 100%;
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+  z-index: 1;
 }
 
 .project-index-tag {
@@ -105,14 +145,16 @@
   width: 100%;
   flex: 1;
   margin: 14px 0;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.35);
+  z-index: 1;
 }
 
 /* Artwork 1: Concentric Spatial Rings */
@@ -218,12 +260,135 @@
   background: linear-gradient(90deg, transparent, #00D1FF, transparent);
 }
 
+/* Artwork: Porch Private Bench Silhouette (Stylized to match Project 01 & 02) */
+.artwork-spatial-bench {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.bench-silhouette-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 152px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spatial-project-wrapper.clickable:hover .bench-silhouette-wrapper {
+  transform: translateY(-4px) scale(1.04);
+}
+
+/* 1. Sleek Bench Cushion Slab */
+.bench-cushion-slab {
+  width: 152px;
+  height: 18px;
+  border-radius: 8px 8px 3px 3px;
+  background: linear-gradient(135deg, rgba(28, 38, 72, 0.95), rgba(12, 18, 40, 0.95));
+  border: 1px solid rgba(0, 209, 255, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 14px rgba(0, 209, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.spatial-project-wrapper.clickable:hover .bench-cushion-slab {
+  border-color: rgba(0, 209, 255, 0.65);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 209, 255, 0.35);
+}
+
+.bench-cushion-accent {
+  width: 62px;
+  height: 2px;
+  border-radius: 1px;
+  background: #00D1FF;
+  box-shadow: 0 0 8px rgba(0, 209, 255, 0.85);
+}
+
+/* 2. Main Bench Storage Cabinet */
+.bench-cabinet-chassis {
+  width: 144px;
+  height: 66px;
+  border-radius: 0 0 10px 10px;
+  margin-top: -1px;
+  background: linear-gradient(135deg, rgba(18, 24, 48, 0.95), rgba(8, 12, 28, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: none;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 209, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+/* Inset Compartment Drawers */
+.bench-compartment-drawer {
+  flex: 1;
+  height: 48px;
+  border-radius: 6px;
+  background: rgba(10, 15, 34, 0.9);
+  border: 1px solid rgba(0, 209, 255, 0.22);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease;
+}
+
+.spatial-project-wrapper.clickable:hover .bench-compartment-drawer {
+  border-color: rgba(0, 209, 255, 0.45);
+}
+
+/* Minimalist Glowing Pull Handles */
+.bench-drawer-pull {
+  width: 22px;
+  height: 5px;
+  border-radius: 3px;
+  display: block;
+}
+
+.bench-drawer-pull.handle-cyan {
+  background: #00D1FF;
+  box-shadow: 0 0 8px rgba(0, 209, 255, 0.85);
+}
+
+.bench-drawer-pull.handle-green {
+  background: #14FF00;
+  box-shadow: 0 0 8px rgba(20, 255, 0, 0.85);
+}
+
+/* 3. Subtle Under-Cabinet Shadow & Ambient Glow */
+.bench-chassis-shadow {
+  width: 130px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0, 209, 255, 0.35) 0%, transparent 70%);
+  filter: blur(4px);
+  margin-top: 4px;
+}
+
 /* Footer Content */
 .project-info-footer {
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .project-title {
@@ -289,6 +454,7 @@
   gap: 4px;
   justify-content: center;
   align-items: center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .scene-logo-dots .dot {
@@ -316,6 +482,7 @@
   justify-content: space-between;
   padding: 10px 12px;
   box-sizing: border-box;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .scene-chip {
@@ -324,6 +491,7 @@
   border-radius: 3px;
   background: linear-gradient(135deg, #d4af37, #f7d070);
   opacity: 0.85;
+  transition: box-shadow 0.3s ease;
 }
 
 .scene-brand {
@@ -332,6 +500,21 @@
   letter-spacing: 0.04em;
   color: #ffffff;
   align-self: flex-end;
+}
+
+/* Card 1 Hover Interactions */
+.spatial-project-wrapper.clickable:hover .scene-card-silhouette {
+  transform: translateY(-4px) scale(1.04);
+  border-color: rgba(0, 209, 255, 0.55);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.75), 0 0 24px rgba(0, 209, 255, 0.3);
+}
+
+.spatial-project-wrapper.clickable:hover .scene-logo-dots {
+  transform: translateY(-2px) scale(1.1);
+}
+
+.spatial-project-wrapper.clickable:hover .scene-chip {
+  box-shadow: 0 0 10px rgba(247, 208, 112, 0.6);
 }
 
 /* Artwork: Visual Communication Card Preview */
@@ -359,7 +542,7 @@
   position: relative;
   z-index: 2;
   transform: rotate(-3deg);
-  transition: transform 0.3s ease;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .visual-card-underlay {
@@ -371,6 +554,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   transform: rotate(5deg) translate(6px, 6px);
   z-index: 1;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background 0.3s ease;
 }
 
 .visual-silhouette-line {
@@ -393,6 +577,24 @@
   background: linear-gradient(135deg, rgba(0, 209, 255, 0.4), rgba(20, 255, 0, 0.3));
   border: 1px solid rgba(0, 209, 255, 0.5);
   align-self: flex-end;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Card 2 Hover Interactions */
+.spatial-project-wrapper.clickable:hover .visual-card-silhouette {
+  transform: rotate(-5deg) translateY(-5px) scale(1.04);
+  border-color: rgba(0, 209, 255, 0.6);
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.8), 0 0 28px rgba(0, 209, 255, 0.32);
+}
+
+.spatial-project-wrapper.clickable:hover .visual-card-underlay {
+  transform: rotate(8deg) translate(10px, 8px) scale(1.02);
+  border-color: rgba(20, 255, 0, 0.35);
+  background: rgba(16, 24, 48, 0.7);
+}
+
+.spatial-project-wrapper.clickable:hover .visual-silhouette-chip {
+  box-shadow: 0 0 12px rgba(0, 209, 255, 0.7);
 }
 
 .spatial-project-wrapper.clickable {
@@ -400,11 +602,15 @@
 }
 
 .spatial-project-wrapper.clickable .project-spatial-surface:hover {
-  border-color: rgba(0, 209, 255, 0.35);
+  border-color: rgba(0, 209, 255, 0.55);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(14, 24, 56, 0.28) 100%);
   box-shadow: 
-    0 28px 60px -12px rgba(0, 0, 0, 0.9),
-    0 0 24px rgba(0, 209, 255, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 32px 64px -10px rgba(0, 0, 0, 0.88),
+    0 0 28px rgba(0, 209, 255, 0.32),
+    inset 0 1px 2px rgba(255, 255, 255, 0.75),
+    inset 0 -1px 1.5px rgba(255, 255, 255, 0.40),
+    inset 1.5px 0 1.5px rgba(255, 255, 255, 0.28),
+    inset -1.5px 0 1.5px rgba(255, 255, 255, 0.28);
 }
 
 .spatial-project-wrapper.clickable .project-explore-row {
