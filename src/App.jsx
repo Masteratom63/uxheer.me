@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ParticleIntro from './components/ParticleIntro/ParticleIntro';
 import Statement from './components/Statement/Statement';
-import SpatialGallery from './components/SpatialGallery/SpatialGallery';
+import SpatialGallery, { getProjectById } from './components/SpatialGallery/SpatialGallery';
 import Project01Scene from './components/Project01Scene/Project01Scene';
 import Project02Scene from './components/Project02Scene/Project02Scene';
 import Project03Scene from './components/Project03Scene/Project03Scene';
@@ -9,6 +9,7 @@ import About from './components/About/About';
 import Capabilities from './components/Capabilities/Capabilities';
 import Contact from './components/Contact/Contact';
 import { updateSpatial } from './utils/spatialController';
+import { trackProjectOpen } from './utils/analytics';
 
 /**
  * App Component
@@ -309,6 +310,7 @@ export default function App() {
 
   // Seamless transition directly from Project 01 to Project 02
   const handleContinueFromProject01To02 = useCallback(() => {
+    trackProjectOpen(getProjectById('visual-communication'));
     setProjectState((prev) => {
       if (prev !== 'OPEN') return prev;
       return 'CLOSING';
@@ -392,6 +394,7 @@ export default function App() {
 
   // Seamless transition directly from Project 02 back to Project 01
   const handleBackFromProject02To01 = useCallback(() => {
+    trackProjectOpen(getProjectById('scotiabank-scene'));
     setProject02State((prev) => {
       if (prev !== 'OPEN') return prev;
       return 'CLOSING';
@@ -423,6 +426,7 @@ export default function App() {
 
   // Seamless transition directly from Project 02 toward Project 03
   const handleContinueFromProject02To03 = useCallback(() => {
+    trackProjectOpen(getProjectById('porch-private'));
     isTransitioningRef.current = false;
     setProject02State((prev) => {
       if (prev === 'CLOSED' || prev === 'CLOSING') return prev;
@@ -508,6 +512,7 @@ export default function App() {
 
   // Seamless transition directly from Project 03 back to Project 02
   const handleBackFromProject03To02 = useCallback(() => {
+    trackProjectOpen(getProjectById('visual-communication'));
     isTransitioningRef.current = false;
     setProject03State((prev) => {
       if (prev === 'CLOSED' || prev === 'CLOSING') return prev;

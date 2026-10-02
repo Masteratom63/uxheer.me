@@ -1,6 +1,42 @@
 import React from 'react';
 import ProjectCard from './ProjectCard';
+import { trackProjectOpen } from '../../utils/analytics';
 import './SpatialGallery.css';
+
+export const PROJECTS = [
+  {
+    id: 'scotiabank-scene',
+    number: 'PROJECT 01',
+    title: 'SCOTIABANK SCENE+',
+    category: 'UX / UI / PRODUCT DESIGN',
+    focusPoint: 0.16,
+    initialTilt: { rx: -1.0, ry: 2.0 },
+    artworkType: 'scene',
+    exploreText: 'ENTER PROJECT',
+  },
+  {
+    id: 'visual-communication',
+    number: 'PROJECT 02',
+    title: 'VISUAL COMMUNICATION',
+    category: 'GRAPHIC / VISUAL / SOCIAL / IDENTITY',
+    focusPoint: 0.34,
+    initialTilt: { rx: 1.0, ry: -2.0 },
+    artworkType: 'visual',
+    exploreText: 'ENTER PROJECT',
+  },
+  {
+    id: 'porch-private',
+    number: 'PROJECT 03',
+    title: 'PORCH PRIVATE',
+    category: 'PRODUCT / OBJECT / INDUSTRIAL DESIGN',
+    focusPoint: 0.48,
+    initialTilt: { rx: -1.0, ry: 1.5 },
+    artworkType: 'bench',
+    exploreText: 'ENTER PROJECT',
+  },
+];
+
+export const getProjectById = (id) => PROJECTS.find((project) => project.id === id);
 
 /**
  * SpatialGallery Component
@@ -18,39 +54,6 @@ export default function SpatialGallery({ isIntroFinished, onEnterProject01, onEn
 
   const isOpening = projectState === 'OPENING';
 
-  const projects = [
-    {
-      id: 'scotiabank-scene',
-      number: 'PROJECT 01',
-      title: 'SCOTIABANK SCENE+',
-      category: 'UX / UI / PRODUCT DESIGN',
-      focusPoint: 0.16,
-      initialTilt: { rx: -1.0, ry: 2.0 },
-      artworkType: 'scene',
-      exploreText: 'ENTER PROJECT',
-    },
-    {
-      id: 'visual-communication',
-      number: 'PROJECT 02',
-      title: 'VISUAL COMMUNICATION',
-      category: 'GRAPHIC / VISUAL / SOCIAL / IDENTITY',
-      focusPoint: 0.34,
-      initialTilt: { rx: 1.0, ry: -2.0 },
-      artworkType: 'visual',
-      exploreText: 'ENTER PROJECT',
-    },
-    {
-      id: 'porch-private',
-      number: 'PROJECT 03',
-      title: 'PORCH PRIVATE',
-      category: 'PRODUCT / OBJECT / INDUSTRIAL DESIGN',
-      focusPoint: 0.48,
-      initialTilt: { rx: -1.0, ry: 1.5 },
-      artworkType: 'bench',
-      exploreText: 'ENTER PROJECT',
-    },
-  ];
-
   return (
     <div
       className={`spatial-gallery-fixed-viewport ${isOpening ? 'gallery-opening' : ''}`}
@@ -58,28 +61,38 @@ export default function SpatialGallery({ isIntroFinished, onEnterProject01, onEn
       style={isOpening ? { opacity: 0, pointerEvents: 'none', display: 'none' } : undefined}
     >
       <div className="spatial-gallery-stage">
-        {projects.map((item) => (
-          <ProjectCard
-            key={item.number}
-            id={item.id}
-            number={item.number}
-            title={item.title}
-            category={item.category}
-            focusPoint={item.focusPoint}
-            initialTilt={item.initialTilt}
-            artworkType={item.artworkType}
-            exploreText={item.exploreText}
-            onEnter={
-              item.id === 'scotiabank-scene'
-                ? onEnterProject01
-                : item.id === 'visual-communication'
-                ? onEnterProject02
-                : item.id === 'porch-private'
-                ? onEnterProject03
-                : undefined
-            }
-          />
-        ))}
+        {PROJECTS.map((item) => {
+          const enterHandler =
+            item.id === 'scotiabank-scene'
+              ? onEnterProject01
+              : item.id === 'visual-communication'
+              ? onEnterProject02
+              : item.id === 'porch-private'
+              ? onEnterProject03
+              : undefined;
+
+          const handleEnter = enterHandler
+            ? () => {
+                trackProjectOpen(item);
+                enterHandler();
+              }
+            : undefined;
+
+          return (
+            <ProjectCard
+              key={item.number}
+              id={item.id}
+              number={item.number}
+              title={item.title}
+              category={item.category}
+              focusPoint={item.focusPoint}
+              initialTilt={item.initialTilt}
+              artworkType={item.artworkType}
+              exploreText={item.exploreText}
+              onEnter={handleEnter}
+            />
+          );
+        })}
       </div>
     </div>
   );
