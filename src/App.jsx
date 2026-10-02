@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ParticleIntro from './components/ParticleIntro/ParticleIntro';
 import Statement from './components/Statement/Statement';
-import SpatialGallery, { getProjectById } from './components/SpatialGallery/SpatialGallery';
+import SpatialGallery, { getProjectById, PROJECTS } from './components/SpatialGallery/SpatialGallery';
 import Project01Scene from './components/Project01Scene/Project01Scene';
 import Project02Scene from './components/Project02Scene/Project02Scene';
 import Project03Scene from './components/Project03Scene/Project03Scene';
@@ -9,7 +9,7 @@ import About from './components/About/About';
 import Capabilities from './components/Capabilities/Capabilities';
 import Contact from './components/Contact/Contact';
 import { updateSpatial } from './utils/spatialController';
-import { trackProjectOpen } from './utils/analytics';
+import { trackProjectOpen, trackSectionView } from './utils/analytics';
 
 /**
  * App Component
@@ -29,11 +29,43 @@ const SECTION_STOPS = [
   0.00, // 0: Statement
   0.16, // 1: Project 01 (Scotiabank Scene+)
   0.34, // 2: Project 02 (Visual Communication)
-  0.48, // 3: Project 03 (Global Capital Exchange)
+  0.48, // 3: Project 03 (Porch Private)
   0.61, // 4: About / Approach
   0.77, // 5: Capabilities
   0.92, // 6: Contact & Calm End State
 ];
+
+// Stable analytics metadata for non-project sections
+const NON_PROJECT_SECTIONS = {
+  0: { id: 'statement', name: 'Statement' },
+  4: { id: 'about', name: 'About / Approach' },
+  5: { id: 'capabilities', name: 'Capabilities' },
+  6: { id: 'contact', name: 'Contact' },
+};
+
+/**
+ * Derives section metadata for analytics without duplicating project definitions.
+ * Indices 1–3 read directly from the canonical PROJECTS array in SpatialGallery.jsx.
+ */
+const getSectionMetadata = (index) => {
+  if (NON_PROJECT_SECTIONS[index]) {
+    return {
+      section_id: NON_PROJECT_SECTIONS[index].id,
+      section_name: NON_PROJECT_SECTIONS[index].name,
+      section_index: index,
+    };
+  }
+  const projectIndex = index - 1;
+  const project = PROJECTS[projectIndex];
+  if (project) {
+    return {
+      section_id: project.id,
+      section_name: project.number ? `${project.number} — ${project.title}` : project.title,
+      section_index: index,
+    };
+  }
+  return null;
+};
 
 export default function App() {
   const [stage, setStage] = useState('intro'); // 'intro' | 'experience'
@@ -53,6 +85,16 @@ export default function App() {
   const rafIdRef = useRef(null);
   const transitionTimerRef = useRef(null);
   const fadeTimerRef = useRef(null);
+  const lastTrackedSectionIndexRef = useRef(-1);
+
+  const notifySectionView = useCallback((index) => {
+    if (lastTrackedSectionIndexRef.current === index) return;
+    lastTrackedSectionIndexRef.current = index;
+    const section = getSectionMetadata(index);
+    if (section) {
+      trackSectionView(section);
+    }
+  }, []);
 
   const isProjectActive = projectState !== 'CLOSED' || project02State !== 'CLOSED' || project03State !== 'CLOSED';
   const isScrollLocked = stage === 'intro' || isProjectActive || exitTransitionStage !== 'idle';
@@ -76,7 +118,9 @@ export default function App() {
     const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const targetScroll = maxScroll * targetRatio;
     window.scrollTo({ top: targetScroll, behavior: 'instant' });
-  }, []);
+
+    notifySectionView(clampedIndex);
+  }, [notifySectionView]);
 
   // Callback when particle intro completes dispersal
   const handleIntroComplete = useCallback(() => {
@@ -85,7 +129,8 @@ export default function App() {
     targetRatioRef.current = 0;
     currentRatioRef.current = 0;
     updateSpatial(0);
-  }, []);
+    notifySectionView(0);
+  }, [notifySectionView]);
 
   // Lock scroll during intro, project view, or exit transition
   useEffect(() => {
@@ -264,6 +309,7 @@ export default function App() {
   // Project 01 Handlers (Scotiabank Scene+)
   // ===================================================================
   const handleEnterProject01 = useCallback(() => {
+    lastTrackedSectionIndexRef.current = -1;
     setProjectState((prev) => {
       if (prev !== 'CLOSED') return prev;
       return 'OPENING';
@@ -295,6 +341,7 @@ export default function App() {
       updateSpatial(0.16);
       setProjectState('CLOSED');
       isTransitioningRef.current = false;
+      notifySectionView(1);
 
       fadeTimerRef.current = setTimeout(() => {
         updateSpatial(0.16);
@@ -306,11 +353,12 @@ export default function App() {
         }, 650);
       }, 120);
     }, 650);
-  }, []);
+  }, [notifySectionView]);
 
   // Seamless transition directly from Project 01 to Project 02
   const handleContinueFromProject01To02 = useCallback(() => {
     trackProjectOpen(getProjectById('visual-communication'));
+    lastTrackedSectionIndexRef.current = -1;
     setProjectState((prev) => {
       if (prev !== 'OPEN') return prev;
       return 'CLOSING';
@@ -348,6 +396,7 @@ export default function App() {
   // Project 02 Handlers (Visual Communication)
   // ===================================================================
   const handleEnterProject02 = useCallback(() => {
+    lastTrackedSectionIndexRef.current = -1;
     setProject02State((prev) => {
       if (prev !== 'CLOSED') return prev;
       return 'OPENING';
@@ -379,6 +428,7 @@ export default function App() {
       updateSpatial(0.34);
       setProject02State('CLOSED');
       isTransitioningRef.current = false;
+      notifySectionView(2);
 
       fadeTimerRef.current = setTimeout(() => {
         updateSpatial(0.34);
@@ -390,11 +440,12 @@ export default function App() {
         }, 650);
       }, 120);
     }, 650);
-  }, []);
+  }, [notifySectionView]);
 
   // Seamless transition directly from Project 02 back to Project 01
   const handleBackFromProject02To01 = useCallback(() => {
     trackProjectOpen(getProjectById('scotiabank-scene'));
+    lastTrackedSectionIndexRef.current = -1;
     setProject02State((prev) => {
       if (prev !== 'OPEN') return prev;
       return 'CLOSING';
@@ -428,6 +479,7 @@ export default function App() {
   const handleContinueFromProject02To03 = useCallback(() => {
     trackProjectOpen(getProjectById('porch-private'));
     isTransitioningRef.current = false;
+    lastTrackedSectionIndexRef.current = -1;
     setProject02State((prev) => {
       if (prev === 'CLOSED' || prev === 'CLOSING') return prev;
       return 'CLOSING';
@@ -466,6 +518,7 @@ export default function App() {
   // ===================================================================
   const handleEnterProject03 = useCallback(() => {
     isTransitioningRef.current = false;
+    lastTrackedSectionIndexRef.current = -1;
     setProject03State((prev) => {
       if (prev !== 'CLOSED') return prev;
       return 'OPENING';
@@ -497,6 +550,7 @@ export default function App() {
       updateSpatial(0.48);
       setProject03State('CLOSED');
       isTransitioningRef.current = false;
+      notifySectionView(3);
 
       fadeTimerRef.current = setTimeout(() => {
         updateSpatial(0.48);
@@ -508,12 +562,13 @@ export default function App() {
         }, 650);
       }, 120);
     }, 650);
-  }, []);
+  }, [notifySectionView]);
 
   // Seamless transition directly from Project 03 back to Project 02
   const handleBackFromProject03To02 = useCallback(() => {
     trackProjectOpen(getProjectById('visual-communication'));
     isTransitioningRef.current = false;
+    lastTrackedSectionIndexRef.current = -1;
     setProject03State((prev) => {
       if (prev === 'CLOSED' || prev === 'CLOSING') return prev;
       return 'CLOSING';
